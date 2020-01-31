@@ -1,26 +1,14 @@
 module.exports = {
-    run:function(creep,spawn){
-        if(creep.memory.working == true && creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0)
-        {
-            creep.memory.working = false;
+    run:function(creep){
+        if(creep.upgradeController(creep.room.controller)==ERR_NOT_IN_RANGE){
+            creep.moveTo(creep.room.controller);
         }
-        else if(creep.memory.working == false && creep.store[RESOURCE_ENERGY] == 0)
+    },
+    prepare:function(creep){
+        var source=creep.pos.findClosestByPath(FIND_SOURCES);
+        if(creep.harvest(source)==ERR_NOT_IN_RANGE)
         {
-            creep.memory.working = true;
-        }
-        if(creep.memory.working == true)
-        {
-            var source=creep.pos.findClosestByPath(FIND_SOURCES);
-            if(creep.harvest(source)==ERR_NOT_IN_RANGE)
-            {
-                creep.moveTo(source);
-            }
-        }
-        else
-        {
-            if(creep.upgradeController(creep.room.controller)==ERR_NOT_IN_RANGE){
-                creep.moveTo(creep.room.controller);
-            }
+            creep.moveTo(source);
         }
     }
 };
