@@ -27,7 +27,7 @@ module.exports = {
             }
         }
         else if(harvestnum<mincrepplive){
-            spawn.spawncustomCreep(spawn.room.energyCapacityAvailable,'harvester');
+            spawn.spawncustomCreep(spawn.room.energyAvailable,'harvester');
         }
     }
 };
