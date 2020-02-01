@@ -1,3 +1,4 @@
 node_modules/
 local/
+.idea/
 screeps-multimeter.json
