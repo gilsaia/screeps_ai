@@ -1,0 +1,36 @@
+{
+  "name": "screeps_ai",
+  "version": "1.0.0",
+  "description": "gilsaia",
+  "main": "dist/main.js",
+  "scripts": {
+    "start": "multimeter",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gilsaia/screeps_ai.git"
+  },
+  "keywords": [
+    "screeps"
+  ],
+  "author": "gilsaia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gilsaia/screeps_ai/issues"
+  },
+  "homepage": "https://github.com/gilsaia/screeps_ai#readme",
+  "dependencies": {
+    "@types/lodash": "^4.14.159",
+    "@types/screeps": "^3.1.3"
+  },
+  "devDependencies": {
+    "grunt": "^1.2.1",
+    "grunt-contrib-clean": "^2.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-screeps": "^1.4.0",
+    "screeps-multimeter": "^1.10.0",
+    "time-grunt": "^2.0.0"
+  }
+}

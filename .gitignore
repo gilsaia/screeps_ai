@@ -1,4 +1,6 @@
 node_modules/
-.screeps.json
+/.screeps.json
 .idea/
+dist/
 screeps-multimeter.json
+.screeps-multimeter.history
