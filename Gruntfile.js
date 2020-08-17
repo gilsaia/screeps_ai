@@ -1,5 +1,5 @@
 module.exports = function(grunt) {
-    var config=require('./local/.screeps.json');
+    var config=require('.screeps.json');
     // 加载任务依赖
     grunt.loadNpmTasks('grunt-screeps');
     grunt.loadNpmTasks('grunt-contrib-watch');
