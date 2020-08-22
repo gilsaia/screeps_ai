@@ -16,8 +16,7 @@ module.exports = {
         }
         else{
             structure=creep.pos.findClosestByPath(FIND_STRUCTURES,{
-                filter:(s)=> s.structureType == STRUCTURE_WALL && s.hits<s.hitsMax 
-            });
+                filter:(s)=> s.structureType == STRUCTURE_WALL && s.hits<s.hitsMax});
             if(structure!=undefined){
                 if(creep.repair(structure)==ERR_NOT_IN_RANGE){
                     creep.moveTo(structure);

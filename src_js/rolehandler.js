@@ -1,7 +1,7 @@
-var roleharvester=require('./roleharvester');
-var roleupgrader=require('./roleupgrader');
-var rolebuilder=require('./rolebuilder');
-var rolerepairer=require('./rolerepairer');
+var roleharvester = require('./roleharvester');
+var roleupgrader = require('./roleupgrader');
+var rolebuilder = require('./rolebuilder');
+var rolerepairer = require('./rolerepairer');
 module.exports ={
     run:function(creep){
         if(creep.memory.working == true && creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0){

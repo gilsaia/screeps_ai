@@ -20,7 +20,7 @@ module.exports = function(grunt) {
                 server: server,
                 email: email,
                 password: password,
-                branch: branch,
+                branch: 'js',
                 ptr: ptr
             },
             dist: {
