@@ -6,6 +6,13 @@ export function loop(): void {
   for (const index in Game.spawns) {
     Game.spawns[index].work();
   }
+  for (const name in Memory.creeps) {
+    if (!Game.creeps[name]) {
+      delete Memory.creeps[name];
+    } else {
+      Game.creeps[name].work();
+    }
+  }
   console.log(sayHello('world!'));
 }
 

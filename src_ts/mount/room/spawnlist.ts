@@ -1,5 +1,5 @@
 export class RoomSpawnList extends Room {
-  public addSpawnTask(task: string): OK | ERR_NAME_EXISTS {
+  public addSpawnTask(task: RoleConstant): OK | ERR_NAME_EXISTS {
     if (!this.memory.spawnList) {
       this.memory.spawnList = [];
     }
@@ -9,7 +9,7 @@ export class RoomSpawnList extends Room {
     this.memory.spawnList.push(task);
     return OK;
   }
-  public hasSpawnTask(task: string): boolean {
+  public hasSpawnTask(task: RoleConstant): boolean {
     if (!this.memory.spawnList) {
       this.memory.spawnList = [];
     }
@@ -21,7 +21,7 @@ export class RoomSpawnList extends Room {
     }
     return this.memory.spawnList.length;
   }
-  public topSpawnTask(): string | undefined {
+  public topSpawnTask(): RoleConstant | undefined {
     if (!this.memory.spawnList) {
       this.memory.spawnList = [];
     }
@@ -30,7 +30,7 @@ export class RoomSpawnList extends Room {
     }
     return this.memory.spawnList[0];
   }
-  public takeSpawnTask(): string | undefined {
+  public takeSpawnTask(): RoleConstant | undefined {
     if (!this.memory.spawnList) {
       this.memory.spawnList = [];
     }

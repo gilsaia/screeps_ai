@@ -1,23 +1,55 @@
+// Creep类型
+type RoleConstant = BaseRoleConstant;
+// Creep基础类型
+type BaseRoleConstant = 'harvester' | 'upgrader' | 'builder';
+// CreepFunction
+interface CreepFunction {
+  isReady?: (creep: Creep) => boolean;
+  source: (creep: Creep) => boolean;
+  target?: (creep: Creep) => boolean;
+  switch?: (creep: Creep) => boolean;
+}
+// Creep
+interface Creep {
+  work(): void;
+}
+// CreepMemory
+interface CreepMemory {
+  role: RoleConstant;
+  working: boolean;
+  source?: Id<any>;
+}
 // Spawn
 interface StructureSpawn {
   work(): void;
-  spawningTask(task: string): OK | ERR_NOT_ENOUGH_ENERGY | ERR_RCL_NOT_ENOUGH | ERR_NAME_EXISTS
+  spawningTask(task: string): OK | ERR_NOT_ENOUGH_ENERGY | ERR_RCL_NOT_ENOUGH | ERR_NAME_EXISTS | ERR_INVALID_TARGET;
+}
+// SourceList
+interface SourceList {
+  id: Id<any>;
+  worker: number;
 }
 // Room
 interface Room {
+  // Source控制
+  findSource(role: RoleConstant): Id<any> | undefined;
+  addWorker(id: Id<any> | undefined): boolean;
+  storeSource(): void;
   // 生产队列api
   addSpawnTask(task: string): OK | ERR_NAME_EXISTS;
   hasSpawnTask(task: string): boolean;
   lenSpawnTask(): number;
-  topSpawnTask(): string | undefined;
-  takeSpawnTask(): string | undefined;
+  topSpawnTask(): RoleConstant | undefined;
+  takeSpawnTask(): RoleConstant | undefined;
 }
 // RoomMemory
 interface RoomMemory {
+  // source工人控制
+  sourceList?: SourceList[];
   // creep数量控制
   creepList?: Map<string, number>;
   // 房间生产队列
-  spawnList?: string[];
+  spawnList?: RoleConstant[];
 }
 // `global` extension samples
 declare namespace NodeJS {
