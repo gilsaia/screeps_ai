@@ -15,9 +15,12 @@ interface Creep {
 }
 // CreepMemory
 interface CreepMemory {
+  // BaseRole need
   role: RoleConstant;
   working: boolean;
   source?: Id<any>;
+  // Room
+  room: string;
 }
 // Spawn
 interface StructureSpawn {
@@ -33,8 +36,10 @@ interface SourceList {
 interface Room {
   // Source控制
   findSource(role: RoleConstant): Id<any> | undefined;
-  addWorker(id: Id<any> | undefined): boolean;
+  changeWorker(id: Id<any> | undefined, changeNum: number): boolean;
   storeSource(): void;
+  // Creep控制
+  changeCreepList(role: RoleConstant, changeNum: number): void;
   // 生产队列api
   addSpawnTask(task: string): OK | ERR_NAME_EXISTS;
   hasSpawnTask(task: string): boolean;
@@ -47,7 +52,8 @@ interface RoomMemory {
   // source工人控制
   sourceList?: SourceList[];
   // creep数量控制
-  creepList?: Map<string, number>;
+  creepControl?: boolean;
+  creepList?: { [role in RoleConstant]: number };
   // 房间生产队列
   spawnList?: RoleConstant[];
 }

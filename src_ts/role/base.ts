@@ -1,6 +1,5 @@
 const baseSource = (creep: Creep): boolean => {
   if (!creep.memory.source) {
-    creep.memory.source = creep.room.findSource(creep.memory.role);
     console.log('Wrong Source!');
     return false;
   }

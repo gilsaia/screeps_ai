@@ -13,7 +13,7 @@ export class CreepBase extends Creep {
     let working = this.memory.working;
     if (func.switch) {
       if (func.switch(this)) {
-        working = !working;
+        this.memory.working = working = !working;
       }
     }
     if (working && func.target) {

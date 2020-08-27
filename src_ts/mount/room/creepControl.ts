@@ -19,7 +19,7 @@ export class RoomCreepControl extends Room {
     }
     return source;
   }
-  public addWorker(id: Id<any> | undefined): boolean {
+  public changeWorker(id: Id<any> | undefined, changeNum: number): boolean {
     if (!id) {
       return false;
     }
@@ -29,6 +29,7 @@ export class RoomCreepControl extends Room {
     }
     for (const sourceConfig of this.memory.sourceList) {
       if (sourceConfig.id === id) {
+        sourceConfig.worker = sourceConfig.worker + changeNum;
         return true;
       }
     }
@@ -42,5 +43,16 @@ export class RoomCreepControl extends Room {
     for (const source of sources) {
       this.memory.sourceList.push({ id: source.id, worker: 0 });
     }
+  }
+  public changeCreepList(role: RoleConstant, changeNum: number): void {
+    if (!this.memory.creepList) {
+      this.memory.creepList = {
+        harvester: 0,
+        upgrader: 0,
+        builder: 0
+      };
+    }
+    this.memory.creepList[role] += changeNum;
+    return;
   }
 }
