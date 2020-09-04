@@ -17,7 +17,13 @@ export function spawnSetup(): void {
     setupCreepControl();
     console.log('Creep Control End');
   }
-  for (const name in Game.spawns) {
-    Game.spawns[name].work();
+}
+
+export function structureSetup(): void {
+  for (const name in Game.structures) {
+    const structure = Game.structures[name];
+    if (structure.work) {
+      structure.work();
+    }
   }
 }

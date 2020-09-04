@@ -22,9 +22,12 @@ interface CreepMemory {
   // Room
   room: string;
 }
+// Structure
+interface Structure {
+  work?(): void;
+}
 // Spawn
 interface StructureSpawn {
-  work(): void;
   spawningTask(task: string): OK | ERR_NOT_ENOUGH_ENERGY | ERR_RCL_NOT_ENOUGH | ERR_NAME_EXISTS | ERR_INVALID_TARGET;
 }
 // SourceList
