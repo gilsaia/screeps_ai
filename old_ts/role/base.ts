@@ -8,9 +8,7 @@ const baseSource = (creep: Creep): boolean => {
     creep.memory.source = undefined;
     return false;
   }
-  if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
-    creep.moveTo(source);
-  }
+  creep.getResource(source, RESOURCE_ENERGY);
   return true;
 };
 const baseSwitch = (creep: Creep): boolean => {

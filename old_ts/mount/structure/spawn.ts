@@ -1,5 +1,5 @@
-import { creepName } from 'utils';
-import { roleConfig } from 'config';
+import { creepName } from 'old_ts/utils';
+import { roleConfig } from 'old_ts/config';
 
 export class SpawnExtend extends StructureSpawn {
   public work(): void {

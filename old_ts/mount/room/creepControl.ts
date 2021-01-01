@@ -1,4 +1,4 @@
-import { SOURCE_MAX_WORKER } from 'config';
+import { SOURCE_MAX_WORKER } from 'old_ts/config';
 
 export class RoomCreepControl extends Room {
   public findSource(role: RoleConstant): Id<any> | undefined {

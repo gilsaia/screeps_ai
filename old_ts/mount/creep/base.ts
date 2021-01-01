@@ -1,4 +1,4 @@
-import { baseRoles } from 'role/base';
+import { baseRoles } from 'old_ts/role/base';
 
 export class CreepBase extends Creep {
   public work(): void {
@@ -21,5 +21,20 @@ export class CreepBase extends Creep {
     } else {
       func.source(this);
     }
+  }
+  public getResource(
+    target: Structure | Source | Mineral | Deposit,
+    resourceType: ResourceConstant
+  ): ScreepsReturnCode {
+    let result: ScreepsReturnCode;
+    if (target instanceof Structure){
+      result = this.withdraw(target, resourceType);
+    } else {
+      result = this.harvest(target);
+    }
+    if (result === ERR_NOT_IN_RANGE) {
+      this.moveTo(target);
+    }
+    return result;
   }
 }
