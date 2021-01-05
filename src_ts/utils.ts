@@ -4,9 +4,10 @@ import _ from 'lodash';
  * 随机生成creep名字
  * role+随机数
  * @param role
+ * @param roomName
  */
-export const creepName = function (role: RoleConstant): string {
-  return role + _.random(0, 1000).toString();
+export const creepName = function (role: RoleConstant, roomName: string): string {
+  return roomName + role + _.random(0, 1000).toString();
 };
 /**
  * 把 obj2 的原型合并到 obj1 的原型上

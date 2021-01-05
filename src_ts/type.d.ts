@@ -1,5 +1,5 @@
 type RoleConstant = BaseRoleConstant;
-type BaseRoleConstant = 'harvester' | 'upgrader' | 'builder';
+type BaseRoleConstant = 'harvester' | 'upgrader' | 'worker';
 /**
  * Task for Spawn to choose which creep to spawn
  */
@@ -31,13 +31,24 @@ interface Room {
   /**
    * CreepTask queue control logic
    */
-  addCreepTask(role: RoleConstant, initial: boolean): ScreepsReturnCode;
+  addCreepTask(role: RoleConstant, initial: boolean, minLevel: number, maxLevel: number): ScreepsReturnCode;
   topCreepTask(): CreepTask | undefined;
   takeCreepTask(): CreepTask | undefined;
+  creepMinLevel(): number;
+  creepMaxLevel(): number;
 }
 interface RoomMemory {
   /**
-   * ToSpawn-Creep in this Room
+   * Control Creep Number List
+   */
+  baseCreepList: { [role in BaseRoleConstant]: number };
+  baseCreepExceptList: { [role in BaseRoleConstant]: number };
+  /**
+   * Room stage in creep control
+   */
+  roomStage: number;
+  /**
+   * ToSpawn-Creep in this room
    */
   creepTaskList: CreepTask[];
 }

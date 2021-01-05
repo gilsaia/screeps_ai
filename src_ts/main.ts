@@ -1,3 +1,4 @@
+import { creepControl } from './module/creepControl';
 import mount from './mount';
 import { creepSetup, structureSetup } from './init';
 
@@ -7,5 +8,6 @@ import { creepSetup, structureSetup } from './init';
 export function loop(): void {
   mount();
   creepSetup();
+  creepControl();
   structureSetup();
 }

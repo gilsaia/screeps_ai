@@ -3,15 +3,17 @@ export class creepTask extends Room {
    * Add New Creep Task
    * @param role Creep role name
    * @param initial Creep initial
+   * @param minLevel
+   * @param maxLevel
    */
-  public addCreepTask(role: RoleConstant, initial: boolean): ScreepsReturnCode {
+  public addCreepTask(role: RoleConstant, initial: boolean, minLevel: number, maxLevel: number): ScreepsReturnCode {
     if (!this.memory.creepTaskList) {
       this.memory.creepTaskList = [];
     }
     const task: CreepTask = {
       role,
-      minLevel: creepTask.creepMinLevel(),
-      maxLevel: creepTask.creepMaxLevel(),
+      minLevel,
+      maxLevel,
       initial
     };
     this.memory.creepTaskList.push(task);
@@ -40,10 +42,10 @@ export class creepTask extends Room {
     return this.memory.creepTaskList.shift();
   }
 
-  private static creepMinLevel(): number {
+  public creepMinLevel(): number {
     return 0;
   }
-  private static creepMaxLevel(): number {
-    return 1;
+  public creepMaxLevel(): number {
+    return 8;
   }
 }
