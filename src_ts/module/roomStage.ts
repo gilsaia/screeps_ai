@@ -1,3 +1,3 @@
-export function roomStage(room: string): number {
+export function roomStage(room: Room): number {
   return 0;
 }

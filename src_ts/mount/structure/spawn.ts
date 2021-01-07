@@ -42,7 +42,7 @@ export class spawnExtend extends StructureSpawn {
   }
   private spawnLevelCreep(roleName: RoleConstant, level: number): ScreepsReturnCode {
     return this.spawnCreep(creepBody[roleName][level], creepName(roleName, this.room.name), {
-      memory: { role: roleName }
+      memory: { role: roleName, working: false }
     });
   }
 }

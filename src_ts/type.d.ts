@@ -21,8 +21,41 @@ interface CreepTask {
    */
   initial: boolean;
 }
+interface CreepConfig {
+  /**
+   * Creep control counter
+   * @param creep
+   */
+  count?: (creep: Creep, interval: number) => void;
+  /**
+   * Basic action
+   * @param creep
+   */
+  source: (creep: Creep) => boolean;
+  /**
+   * Optional target action when working is true
+   * @param creep
+   */
+  target?: (creep: Creep) => boolean;
+  /**
+   * Change working condition
+   * @param creep
+   */
+  sourceSwitch?: (creep: Creep) => boolean;
+  targetSwitch?: (creep: Creep) => boolean;
+}
 interface Creep {
   work(): void;
+}
+interface CreepMemory {
+  /**
+   * Creep Role
+   */
+  role: RoleConstant;
+  /**
+   * Creep condition
+   */
+  working: boolean;
 }
 interface Structure {
   work?(): void;
@@ -34,6 +67,10 @@ interface Room {
   addCreepTask(role: RoleConstant, initial: boolean, minLevel: number, maxLevel: number): ScreepsReturnCode;
   topCreepTask(): CreepTask | undefined;
   takeCreepTask(): CreepTask | undefined;
+
+  /**
+   * Room creep level control additional
+   */
   creepMinLevel(): number;
   creepMaxLevel(): number;
 }
