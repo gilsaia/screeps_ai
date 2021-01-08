@@ -22,5 +22,3 @@ export const assignPrototype = function (obj1: { [key: string]: any }, obj2: { [
     } else obj1.prototype[key] = obj2.prototype[key];
   });
 };
-
-export const baseRoleValid(role:RoleCon)

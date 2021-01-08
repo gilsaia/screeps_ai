@@ -26,6 +26,24 @@ export const creepApi = {
       Game.rooms[room].addCreepTask(role, initial, minLevel, maxLevel);
     }
     return OK;
+  },
+  /**
+   * Delete creep need to do thing
+   * @param creep
+   */
+  finish(creep: CreepMemory): void {
+    switch (creep.role) {
+      case 'harvester':
+        if (!creep.sourceId) {
+          return;
+        }
+        for (const source of Game.rooms[creep.room].memory.sourceList) {
+          if (source.id === creep.sourceId) {
+            source.harvester--;
+            return;
+          }
+        }
+    }
   }
 };
 

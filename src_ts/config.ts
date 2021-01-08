@@ -33,5 +33,20 @@ export const baseExceptCreepNum: { [role in BaseRoleConstant]: number }[] = [
  * Init BaseCreep num for init
  */
 export const baseCreepNumInit: { [role in BaseRoleConstant]: number } = { harvester: 0, upgrader: 0, worker: 0 };
-
+/**
+ * Creep control check interval
+ */
 export const creepControlInterval = 10;
+/**
+ * 8 Direction check
+ */
+export const directionCheck = [
+  [-1, -1],
+  [-1, 0],
+  [-1, 1],
+  [0, -1],
+  [0, 1],
+  [1, -1],
+  [1, 0],
+  [1, 1]
+];

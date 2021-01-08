@@ -44,6 +44,20 @@ interface CreepConfig {
   sourceSwitch?: (creep: Creep) => boolean;
   targetSwitch?: (creep: Creep) => boolean;
 }
+
+/**
+ * Data different creep need
+ */
+type creepData = harvesterData | workerData;
+interface harvesterData {
+  room: string;
+  sourceId: Id<Source>;
+  sourcePosX: number;
+  sourcePosY: number;
+}
+interface workerData {
+  sourceId: Id<any>;
+}
 interface Creep {
   work(): void;
 }
@@ -56,6 +70,7 @@ interface CreepMemory {
    * Creep condition
    */
   working: boolean;
+  data?: creepData;
 }
 interface Structure {
   work?(): void;
@@ -74,6 +89,13 @@ interface Room {
   creepMinLevel(): number;
   creepMaxLevel(): number;
 }
+interface SourceCondition {
+  id: Id<Source>;
+  x: number;
+  y: number;
+  complete: boolean;
+  harvester: number;
+}
 interface RoomMemory {
   /**
    * Control Creep Number List
@@ -88,6 +110,10 @@ interface RoomMemory {
    * ToSpawn-Creep in this room
    */
   creepTaskList: CreepTask[];
+  /**
+   * Room source condition
+   */
+  sourceList: SourceCondition[];
 }
 declare namespace NodeJS {
   interface Global {
