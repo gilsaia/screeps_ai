@@ -4,43 +4,80 @@ export const sourceApi = {
    * Alloc a source to creep
    * @param room
    */
-  allocSource(room: Room): Id<Source> {
+  allocSource(room: Room): SourceCondition {
     if (!room.memory.sourceList) {
       findSource(room);
     }
     if (room.memory.sourceList[1] && room.memory.sourceList[1].harvester < room.memory.sourceList[0].harvester) {
       room.memory.sourceList[1].harvester++;
-      return room.memory.sourceList[1].id;
+      return room.memory.sourceList[1];
     } else {
       room.memory.sourceList[0].harvester++;
-      return room.memory.sourceList[0].id;
+      return room.memory.sourceList[0];
     }
+  },
+  /**
+   * Find source condition
+   * @param room
+   * @param id
+   */
+  searchSource(room: Room, id: Id<Source>): SourceCondition | undefined {
+    if (!room.memory.sourceList) {
+      findSource(room);
+    }
+    for (const source of room.memory.sourceList) {
+      if (source.sourceId === id) {
+        return source;
+      }
+    }
+    return undefined;
   },
   /**
    * Check source container complete
    * @param room
+   * @param deepCheck
+   * @param id
    */
-  checkSource(room: Room): boolean {
+  checkSource(room: Room, deepCheck: boolean, id?: Id<Source>): boolean {
     if (!room.memory.sourceList) {
       findSource(room);
     }
-    let complete = true;
-    for (const source of room.memory.sourceList) {
-      const pos = new RoomPosition(source.x, source.y, room.name);
-      const structures = pos.lookFor(LOOK_STRUCTURES);
-      let find = false;
-      for (const structure of structures) {
-        if (structure.structureType === STRUCTURE_CONTAINER) {
-          find = true;
+    if (deepCheck) {
+      let complete = true;
+      for (const source of room.memory.sourceList) {
+        /**
+         * Check single source
+         */
+        if (id && source.sourceId !== id) {
+          continue;
+        }
+        const pos = new RoomPosition(source.containerPosX, source.containerPosY, room.name);
+        const structures = pos.lookFor(LOOK_STRUCTURES);
+        let find = false;
+        for (const structure of structures) {
+          if (structure.structureType === STRUCTURE_CONTAINER) {
+            source.containerId = structure.id;
+            source.complete = true;
+            find = true;
+            break;
+          }
+        }
+        if (!find) {
+          complete = false;
           break;
         }
       }
-      if (!find) {
-        complete = false;
-        break;
+      return complete;
+    } else {
+      let complete = true;
+      for (const source of room.memory.sourceList) {
+        if (id && source.sourceId !== id) {
+          continue;
+        }
+        complete = complete && source.complete;
       }
+      return complete;
     }
-    return complete;
   }
 };
 
@@ -63,7 +100,7 @@ function findSource(room: Room): ScreepsReturnCode {
      * Each direction for the source
      */
     for (const dir of directionCheck) {
-      const pos = new RoomPosition(sourcePos.x + dir[0], sourcePos.y + dir[1], room.name);
+      const pos = new RoomPosition(sourcePos.x + dir[1][0], sourcePos.y + dir[1][1], room.name);
       let fee = 0;
       if (terrain.get(pos.x, pos.y) === TERRAIN_MASK_WALL) {
         continue;
@@ -72,7 +109,7 @@ function findSource(room: Room): ScreepsReturnCode {
        * Calculate fee of this pos
        */
       for (const subDir of directionCheck) {
-        const subPos = new RoomPosition(pos.x + subDir[0], pos.y + subDir[1], room.name);
+        const subPos = new RoomPosition(pos.x + subDir[1][0], pos.y + subDir[1][1], room.name);
         switch (terrain.get(subPos.x, subPos.y)) {
           case 0:
             fee += 5;
@@ -99,10 +136,12 @@ function findSource(room: Room): ScreepsReturnCode {
       console.log('Find Source Error %d', err);
       return err;
     }
+    const constructionSite = containerPos.lookFor(LOOK_CONSTRUCTION_SITES);
     const sourceCondition: SourceCondition = {
-      id: source.id,
-      x: containerPos.x,
-      y: containerPos.y,
+      sourceId: source.id,
+      containerId: constructionSite[0].id,
+      containerPosX: containerPos.x,
+      containerPosY: containerPos.y,
       complete: false,
       harvester: 0
     };
@@ -123,7 +162,7 @@ export function roomStage(room: Room): number {
 }
 export function updateRoomStage(room: Room): number {
   if (room.memory.roomStage < 1) {
-    if (sourceApi.checkSource(room)) {
+    if (sourceApi.checkSource(room, true)) {
       room.memory.roomStage = 1;
     }
   }

@@ -54,6 +54,10 @@ interface harvesterData {
   sourceId: Id<Source>;
   sourcePosX: number;
   sourcePosY: number;
+  containerId: Id<ConstructionSite | Structure<StructureConstant>>;
+  containerPosX: number;
+  containerPosY: number;
+  complete: boolean;
 }
 interface workerData {
   sourceId: Id<any>;
@@ -90,9 +94,10 @@ interface Room {
   creepMaxLevel(): number;
 }
 interface SourceCondition {
-  id: Id<Source>;
-  x: number;
-  y: number;
+  sourceId: Id<Source>;
+  containerId: Id<ConstructionSite | Structure<StructureConstant>>;
+  containerPosX: number;
+  containerPosY: number;
   complete: boolean;
   harvester: number;
 }

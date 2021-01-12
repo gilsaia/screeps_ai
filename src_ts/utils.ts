@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { directionCheck } from './config';
 
 /**
  * 随机生成creep名字
@@ -34,4 +35,22 @@ export const assignPrototype = function (obj1: { [key: string]: any }, obj2: { [
  */
 export const baseRoleValid = function (role: RoleConstant): role is BaseRoleConstant {
   return role === 'harvester' || role === 'upgrader' || role === 'worker';
+};
+/**
+ * Find pos can walk to
+ * @param pos
+ */
+export const findWalkableDir = function (pos: RoomPosition): DirectionConstant {
+  const terrain = new Room.Terrain(pos.roomName);
+  for (const dir of directionCheck) {
+    if (!terrain.get(pos.x + dir[1][0], pos.y + dir[1][1])) {
+      return dir[0];
+    }
+  }
+  for (const dir of directionCheck) {
+    if (terrain.get(pos.x + dir[1][0], pos.y + dir[1][1]) === TERRAIN_MASK_SWAMP) {
+      return dir[0];
+    }
+  }
+  return TOP;
 };

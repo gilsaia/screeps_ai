@@ -1,5 +1,5 @@
 import { baseCreepNumInit, baseExceptCreepNum } from '../config';
-import { roomStage } from './roomStage';
+import { roomStage, sourceApi } from './roomStage';
 
 /**
  * API change creep
@@ -28,17 +28,48 @@ export const creepApi = {
     return OK;
   },
   /**
+   * Init memory for the creep
+   * @param creep
+   */
+  init(creep: Creep): void {
+    let sourceCondition;
+    let source;
+    switch (creep.memory.role) {
+      case 'harvester':
+        sourceCondition = sourceApi.allocSource(creep.room);
+        source = Game.getObjectById(sourceCondition.sourceId);
+        if (!source) {
+          console.log('err sourceId check now!');
+          break;
+        }
+        creep.memory.data = {
+          sourceId: sourceCondition.sourceId,
+          containerId: sourceCondition.containerId,
+          room: creep.room.name,
+          sourcePosX: source.pos.x,
+          sourcePosY: source.pos.y,
+          containerPosX: sourceCondition.containerPosX,
+          containerPosY: sourceCondition.containerPosY,
+          complete: sourceCondition.complete
+        };
+        break;
+    }
+    return;
+  },
+  /**
    * Delete creep need to do thing
    * @param creep
    */
   finish(creep: CreepMemory): void {
+    let data = null;
     switch (creep.role) {
       case 'harvester':
-        if (!creep.sourceId) {
+        if (!creep.data) {
           return;
         }
-        for (const source of Game.rooms[creep.room].memory.sourceList) {
-          if (source.id === creep.sourceId) {
+        data = creep.data as harvesterData;
+        for (const source of Game.rooms[data.room].memory.sourceList) {
+          if (source.sourceId === data.sourceId) {
             source.harvester--;
             return;
           }
