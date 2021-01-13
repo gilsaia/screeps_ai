@@ -23,8 +23,7 @@ export class baseCreep extends Creep {
       if (config.targetSwitch(this)) {
         this.memory.working = false;
       }
-    }
-    if (!this.memory.working && config.sourceSwitch) {
+    } else if (!this.memory.working && config.sourceSwitch) {
       if (config.sourceSwitch(this)) {
         this.memory.working = true;
       }

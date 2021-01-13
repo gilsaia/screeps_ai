@@ -48,7 +48,7 @@ interface CreepConfig {
 /**
  * Data different creep need
  */
-type creepData = harvesterData | workerData;
+type creepData = harvesterData | workerData | upgraderData;
 interface harvesterData {
   room: string;
   sourceId: Id<Source>;
@@ -59,8 +59,11 @@ interface harvesterData {
   containerPosY: number;
   complete: boolean;
 }
+interface upgraderData {
+  sourceId: Id<Source | Structure<StructureConstant>>;
+}
 interface workerData {
-  sourceId: Id<any>;
+  sourceId: Id<Source | Structure<StructureConstant>>;
 }
 interface Creep {
   work(): void;
@@ -95,7 +98,7 @@ interface Room {
 }
 interface SourceCondition {
   sourceId: Id<Source>;
-  containerId: Id<ConstructionSite | Structure<StructureConstant>>;
+  containerId?: Id<ConstructionSite | Structure<StructureConstant>>;
   containerPosX: number;
   containerPosY: number;
   complete: boolean;
@@ -118,6 +121,7 @@ interface RoomMemory {
   /**
    * Room source condition
    */
+  sourceCheck: boolean;
   sourceList: SourceCondition[];
 }
 declare namespace NodeJS {

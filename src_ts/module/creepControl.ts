@@ -53,6 +53,12 @@ export const creepApi = {
           complete: sourceCondition.complete
         };
         break;
+      case 'upgrader':
+        source = sourceApi.getSource(creep.room);
+        creep.memory.data = {
+          sourceId: source
+        };
+        break;
     }
     return;
   },
@@ -65,15 +71,18 @@ export const creepApi = {
     switch (creep.role) {
       case 'harvester':
         if (!creep.data) {
-          return;
+          break;
         }
         data = creep.data as harvesterData;
         for (const source of Game.rooms[data.room].memory.sourceList) {
           if (source.sourceId === data.sourceId) {
             source.harvester--;
-            return;
+            break;
           }
         }
+        break;
+      case 'upgrader':
+        break;
     }
   }
 };
@@ -99,9 +108,7 @@ export function creepControl(interval = 10): void {
     const checkRoom = Game.rooms[room];
     const minLevel = Game.rooms[room].creepMinLevel();
     const maxLevel = Game.rooms[room].creepMaxLevel();
-    if (!checkRoom.memory.baseCreepExceptList) {
-      checkRoom.memory.baseCreepExceptList = baseExceptCreepNum[roomStage(checkRoom)];
-    }
+    checkRoom.memory.baseCreepExceptList = baseExceptCreepNum[roomStage(checkRoom)];
     if (!checkRoom.memory.baseCreepList) {
       checkRoom.memory.baseCreepList = baseCreepNumInit;
     }
