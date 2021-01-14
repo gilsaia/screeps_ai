@@ -127,7 +127,6 @@ export function creepControl(interval = 10): void {
       if (toSpawn > 0) {
         creepApi.add(role as BaseRoleConstant, toSpawn, room, true, minLevel, maxLevel);
       }
-      checkRoom.memory.baseCreepList[role as BaseRoleConstant] = 0;
     }
   }
 }
