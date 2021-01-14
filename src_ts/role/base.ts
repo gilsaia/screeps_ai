@@ -1,20 +1,7 @@
 import { creepApi } from '../module/creepControl';
 import { sourceApi, updateRoomStage } from '../module/roomStage';
-import { baseRoleValid, findWalkableDir } from '../utils';
+import { findWalkableDir } from '../utils';
 
-const baseCount = (creep: Creep, interval: number): void => {
-  /**
-   * Not right time
-   */
-  if (Game.time % interval) {
-    return;
-  }
-  if (!baseRoleValid(creep.memory.role)) {
-    return;
-  }
-  ++creep.room.memory.baseCreepList[creep.memory.role];
-  return;
-};
 const baseSource = (creep: Creep): boolean => {
   if (!creep.memory.data) {
     creepApi.init(creep);
@@ -105,18 +92,16 @@ const upgradeTarget = (creep: Creep): boolean => {
 };
 export const baseRoles: { [role in BaseRoleConstant]: CreepConfig } = {
   harvester: {
-    count: baseCount,
     source: harvestSource,
     target: harvestTarget,
     sourceSwitch: harvestSourceSwitch,
     targetSwitch: harvestTargetSwitch
   },
   upgrader: {
-    count: baseCount,
     source: baseSource,
     target: upgradeTarget,
     sourceSwitch: baseSourceSwitch,
     targetSwitch: baseTargetSwitch
   },
-  worker: { count: baseCount, source: baseSource }
+  worker: { source: baseSource }
 };

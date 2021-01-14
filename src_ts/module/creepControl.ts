@@ -15,7 +15,7 @@ export const creepApi = {
    * @param maxLevel
    */
   add(
-    role: BaseRoleConstant,
+    role: RoleConstant,
     num: number,
     room: string,
     initial: boolean,
@@ -45,7 +45,6 @@ export const creepApi = {
         creep.memory.data = {
           sourceId: sourceCondition.sourceId,
           containerId: sourceCondition.containerId,
-          room: creep.room.name,
           sourcePosX: source.pos.x,
           sourcePosY: source.pos.y,
           containerPosX: sourceCondition.containerPosX,
@@ -63,25 +62,34 @@ export const creepApi = {
     return;
   },
   /**
+   * Count creep
+   * @param room
+   * @param role
+   */
+  count(room: Room, role: RoleConstant): void {
+    switch (role) {
+      case 'harvester':
+      case 'upgrader':
+      case 'worker':
+        room.memory.baseCreepList[role]++;
+        break;
+    }
+    return;
+  },
+  /**
    * Delete creep need to do thing
    * @param creep
    */
   finish(creep: CreepMemory): void {
-    let data = null;
+    let minLevel;
+    let maxLevel;
     switch (creep.role) {
       case 'harvester':
-        if (!creep.data) {
-          break;
-        }
-        data = creep.data as harvesterData;
-        for (const source of Game.rooms[data.room].memory.sourceList) {
-          if (source.sourceId === data.sourceId) {
-            source.harvester--;
-            break;
-          }
-        }
-        break;
+      case 'worker':
       case 'upgrader':
+        minLevel = Game.rooms[creep.room].creepMinLevel();
+        maxLevel = Game.rooms[creep.room].creepMaxLevel();
+        creepApi.add(creep.role, 1, creep.room, false, minLevel, maxLevel);
         break;
     }
   }
@@ -117,7 +125,7 @@ export function creepControl(interval = 10): void {
         checkRoom.memory.baseCreepExceptList[role as BaseRoleConstant] -
         checkRoom.memory.baseCreepList[role as BaseRoleConstant];
       if (toSpawn > 0) {
-        creepApi.add(role as BaseRoleConstant, toSpawn, room, false, minLevel, maxLevel);
+        creepApi.add(role as BaseRoleConstant, toSpawn, room, true, minLevel, maxLevel);
       }
       checkRoom.memory.baseCreepList[role as BaseRoleConstant] = 0;
     }

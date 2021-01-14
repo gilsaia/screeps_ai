@@ -48,9 +48,9 @@ interface CreepConfig {
 /**
  * Data different creep need
  */
-type creepData = harvesterData | workerData | upgraderData;
+type creepData = baseCreepData;
+type baseCreepData = harvesterData | workerData | upgraderData;
 interface harvesterData {
-  room: string;
   sourceId: Id<Source>;
   sourcePosX: number;
   sourcePosY: number;
@@ -77,6 +77,7 @@ interface CreepMemory {
    * Creep condition
    */
   working: boolean;
+  room: string;
   data?: creepData;
 }
 interface Structure {
@@ -102,7 +103,6 @@ interface SourceCondition {
   containerPosX: number;
   containerPosY: number;
   complete: boolean;
-  harvester: number;
 }
 interface RoomMemory {
   /**

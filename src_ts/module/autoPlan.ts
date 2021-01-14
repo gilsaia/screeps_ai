@@ -73,8 +73,7 @@ function findSource(room: Room): ScreepsReturnCode {
       sourceId: source.id,
       containerPosX: containerPos.x,
       containerPosY: containerPos.y,
-      complete: false,
-      harvester: 0
+      complete: false
     };
     room.memory.sourceList.push(sourceCondition);
   }

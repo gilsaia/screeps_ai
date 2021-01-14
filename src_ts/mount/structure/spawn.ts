@@ -1,4 +1,5 @@
 import { creepBody, energyCreepLevel } from '../../config';
+import { creepApi } from '../../module/creepControl';
 import { creepName } from '../../utils';
 
 export class spawnExtend extends StructureSpawn {
@@ -15,6 +16,7 @@ export class spawnExtend extends StructureSpawn {
     }
     const creepLevel = this.findCreepLevel(task.initial);
     if (this.spawnLevelCreep(task.role, creepLevel) === OK) {
+      creepApi.count(this.room, task.role);
       this.room.takeCreepTask();
     }
     return;
@@ -42,7 +44,7 @@ export class spawnExtend extends StructureSpawn {
   }
   private spawnLevelCreep(roleName: RoleConstant, level: number): ScreepsReturnCode {
     return this.spawnCreep(creepBody[roleName][level], creepName(roleName, this.room.name), {
-      memory: { role: roleName, working: false }
+      memory: { role: roleName, working: false, room: this.room.name }
     });
   }
 }

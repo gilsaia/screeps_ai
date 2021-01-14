@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export const sourceApi = {
   /**
    * Alloc a source to creep
@@ -7,13 +9,8 @@ export const sourceApi = {
     if (!room.memory.sourceCheck) {
       findContainer(room);
     }
-    if (room.memory.sourceList[1] && room.memory.sourceList[1].harvester < room.memory.sourceList[0].harvester) {
-      room.memory.sourceList[1].harvester++;
-      return room.memory.sourceList[1];
-    } else {
-      room.memory.sourceList[0].harvester++;
-      return room.memory.sourceList[0];
-    }
+    room.memory.sourceList.reverse();
+    return room.memory.sourceList[0];
   },
   /**
    * Find source condition
@@ -40,12 +37,14 @@ export const sourceApi = {
       findContainer(room);
     }
     let res;
-    if (room.memory.sourceList[0].complete) {
-      res = room.memory.sourceList[0].containerId as Id<Structure<StructureConstant>>;
+    // TODO 物流系统上线后变为从物流系统获取
+    const index = _.random(0, room.memory.sourceList.length);
+    if (room.memory.sourceList[index].complete) {
+      res = room.memory.sourceList[index].containerId as Id<Structure<StructureConstant>>;
     } else {
-      res = room.memory.sourceList[0].sourceId;
+      res = room.memory.sourceList[index].sourceId;
     }
-    room.memory.sourceList.reverse();
+    // room.memory.sourceList.reverse();
     return res;
   },
   /**
