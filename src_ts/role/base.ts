@@ -1,6 +1,5 @@
 import { creepApi } from '../module/creepControl';
 import { sourceApi, updateRoomStage } from '../module/roomStage';
-import { findWalkableDir } from '../utils';
 
 const baseSource = (creep: Creep): boolean => {
   if (!creep.memory.data) {
@@ -46,10 +45,6 @@ const harvestTarget = (creep: Creep): boolean => {
     creepApi.init(creep);
   }
   const data = creep.memory.data as harvesterData;
-  if (creep.pos.isEqualTo(data.containerPosX, data.containerPosY)) {
-    const dir = findWalkableDir(creep.pos);
-    creep.move(dir);
-  }
   const constructionSite = Game.getObjectById(data.containerId) as ConstructionSite;
   const err = creep.build(constructionSite);
   if (err === ERR_NOT_IN_RANGE) {
