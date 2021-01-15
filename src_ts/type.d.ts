@@ -96,6 +96,11 @@ interface Room {
    */
   creepMinLevel(): number;
   creepMaxLevel(): number;
+
+  /**
+   * Backup Control function(not use at normal)
+   */
+  baseCreepListCorrect(): void;
 }
 interface SourceCondition {
   sourceId: Id<Source>;
