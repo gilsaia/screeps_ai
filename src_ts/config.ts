@@ -60,3 +60,9 @@ export const directionCheck = new Map<DirectionConstant, number[]>([
   [7, [-1, 0]],
   [8, [-1, -1]]
 ]);
+/**
+ * Transport task type map to number
+ */
+export const transportTaskTypeMap: { [type in TransportTaskType]: number } = {
+  fillExtension: 0
+};

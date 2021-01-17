@@ -7,16 +7,11 @@ export class spawnExtend extends StructureSpawn {
    * Find if there is creep task and spawn it
    */
   public work(): void {
-    console.log('123');
     if (this.spawning) {
       return;
     }
-    console.log('?????');
-    const res = this.store.getFreeCapacity(RESOURCE_ENERGY);
-    console.log('Energy', res);
-    if (this.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
-      console.log('???');
-      this.room.addTransportTask(RESOURCE_ENERGY, this.id);
+    if (this.room.energyAvailable < this.room.energyCapacityAvailable) {
+      this.room.addTransportTask(RESOURCE_ENERGY, 'fillExtension');
     }
     const task = this.room.topCreepTask();
     if (!task) {

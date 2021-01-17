@@ -1,26 +1,32 @@
+import { transportTaskTypeMap } from '../../config';
+
 export class transportTask extends Room {
-  public addTransportTask(type: ResourceConstant, id: Id<Structure<StructureConstant>>): ScreepsReturnCode {
-    if (!this.memory.transportTaskList || !this.memory.transportTaskSet) {
-      console.log('create new');
+  public addTransportTask(resourceType: ResourceConstant, transportType: TransportTaskType): ScreepsReturnCode {
+    if (!this.memory.transportTaskList) {
       this.memory.transportTaskList = [];
-      this.memory.transportTaskSet = new Set<Id<Structure<StructureConstant>>>();
+      this.memory.transportTaskSet = [];
     }
-    const taskType = TaskType.transport;
-    if (!this.memory.transportTaskSet.has(id)) {
-      const task = { resourceType: type, taskType, id };
+    if (this.memory.transportTaskSet[transportTaskTypeMap[transportType]] !== 1) {
+      const taskType: TaskType = 'transport';
+      const task: TransportTask = { resourceType, taskType, transportType };
       this.memory.transportTaskList.push(task);
+      this.memory.transportTaskSet[transportTaskTypeMap[transportType]] = 1;
     }
     return OK;
   }
   public takeTransportTask(): TransportTask | undefined {
-    if (!this.memory.transportTaskList || !this.memory.transportTaskSet) {
+    if (!this.memory.transportTaskList) {
       this.memory.transportTaskList = [];
-      this.memory.transportTaskSet = new Set<Id<Structure<StructureConstant>>>();
+      this.memory.transportTaskSet = [];
     }
     return this.memory.transportTaskList.shift();
   }
   public finishTransportTask(task: TransportTask): ScreepsReturnCode {
-    this.memory.transportTaskSet.delete(task.id);
+    if (!this.memory.transportTaskList) {
+      this.memory.transportTaskList = [];
+      this.memory.transportTaskSet = [];
+    }
+    this.memory.transportTaskSet[transportTaskTypeMap[task.transportType]] = 0;
     return OK;
   }
 }

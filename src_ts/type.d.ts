@@ -52,16 +52,13 @@ interface CreepConfig {
 /**
  * Different task type
  */
-declare enum TaskType {
-  transport,
-  build,
-  repair
-}
+type TaskType = 'transport' | 'build' | 'repair';
 type RoomTask = TransportTask;
+type TransportTaskType = 'fillExtension';
 interface TransportTask {
   resourceType: ResourceConstant;
   taskType: TaskType;
-  id: Id<Structure<StructureConstant>>;
+  transportType: TransportTaskType;
 }
 /**
  * Data different creep need
@@ -116,7 +113,7 @@ interface Room {
   /**
    * TransportTask queue control logic
    */
-  addTransportTask(type: ResourceConstant, id: Id<Structure<StructureConstant>>): ScreepsReturnCode;
+  addTransportTask(type: ResourceConstant, transportType: TransportTaskType): ScreepsReturnCode;
   takeTransportTask(): TransportTask | undefined;
   finishTransportTask(task: TransportTask): ScreepsReturnCode;
   /**
@@ -160,7 +157,7 @@ interface RoomMemory {
    * Room transport task
    */
   transportTaskList: TransportTask[];
-  transportTaskSet: Set<Id<Structure<StructureConstant>>>;
+  transportTaskSet: number[];
 }
 declare namespace NodeJS {
   interface Global {
