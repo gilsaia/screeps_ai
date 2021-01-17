@@ -1,5 +1,5 @@
 type RoleConstant = BaseRoleConstant;
-type BaseRoleConstant = 'harvester' | 'upgrader' | 'worker';
+type BaseRoleConstant = 'harvester' | 'upgrader' | 'worker' | 'filler';
 /**
  * Task for Spawn to choose which creep to spawn
  */
@@ -21,6 +21,10 @@ interface CreepTask {
    */
   initial: boolean;
 }
+
+/**
+ * Function creep use to act
+ */
 interface CreepConfig {
   /**
    * Creep control counter
@@ -46,10 +50,24 @@ interface CreepConfig {
 }
 
 /**
+ * Different task type
+ */
+declare enum TaskType {
+  transport,
+  build,
+  repair
+}
+type RoomTask = TransportTask;
+interface TransportTask {
+  resourceType: ResourceConstant;
+  taskType: TaskType;
+  id: Id<Structure<StructureConstant>>;
+}
+/**
  * Data different creep need
  */
 type creepData = baseCreepData;
-type baseCreepData = harvesterData | workerData | upgraderData;
+type baseCreepData = harvesterData | workerData | upgraderData | fillerData;
 interface harvesterData {
   sourceId: Id<Source>;
   sourcePosX: number;
@@ -64,6 +82,10 @@ interface upgraderData {
 }
 interface workerData {
   sourceId: Id<Source | Structure<StructureConstant>>;
+}
+interface fillerData {
+  sourceId: Id<Source | Structure<StructureConstant>>;
+  task?: TransportTask;
 }
 interface Creep {
   work(): void;
@@ -91,6 +113,12 @@ interface Room {
   topCreepTask(): CreepTask | undefined;
   takeCreepTask(): CreepTask | undefined;
 
+  /**
+   * TransportTask queue control logic
+   */
+  addTransportTask(type: ResourceConstant, id: Id<Structure<StructureConstant>>): ScreepsReturnCode;
+  takeTransportTask(): TransportTask | undefined;
+  finishTransportTask(task: TransportTask): ScreepsReturnCode;
   /**
    * Room creep level control additional
    */
@@ -128,6 +156,11 @@ interface RoomMemory {
    */
   sourceCheck: boolean;
   sourceList: SourceCondition[];
+  /**
+   * Room transport task
+   */
+  transportTaskList: TransportTask[];
+  transportTaskSet: Set<Id<Structure<StructureConstant>>>;
 }
 declare namespace NodeJS {
   interface Global {

@@ -1,5 +1,6 @@
 import { creepApi } from '../module/creepControl';
 import { sourceApi, updateRoomStage } from '../module/roomStage';
+import { taskApi } from '../module/taskHandle';
 
 const baseSource = (creep: Creep): boolean => {
   if (!creep.memory.data) {
@@ -85,6 +86,23 @@ const upgradeTarget = (creep: Creep): boolean => {
   }
   return true;
 };
+const fillTarget = (creep: Creep): boolean => {
+  if (!creep.memory.data) {
+    creepApi.init(creep);
+  }
+  const data = creep.memory.data as fillerData;
+  if (!data.task) {
+    data.task = creep.room.takeTransportTask();
+  }
+  if (data.task) {
+    const err = taskApi.exec(creep, data.task);
+    if (err === OK) {
+      creep.room.finishTransportTask(data.task);
+      delete data.task;
+    }
+  }
+  return true;
+};
 export const baseRoles: { [role in BaseRoleConstant]: CreepConfig } = {
   harvester: {
     source: harvestSource,
@@ -98,5 +116,6 @@ export const baseRoles: { [role in BaseRoleConstant]: CreepConfig } = {
     sourceSwitch: baseSourceSwitch,
     targetSwitch: baseTargetSwitch
   },
-  worker: { source: baseSource }
+  worker: { source: baseSource },
+  filler: { source: baseSource, target: fillTarget, sourceSwitch: baseSourceSwitch, targetSwitch: baseTargetSwitch }
 };

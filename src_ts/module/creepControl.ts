@@ -58,6 +58,12 @@ export const creepApi = {
           sourceId: source
         };
         break;
+      case 'filler':
+        source = sourceApi.getSource(creep.room);
+        creep.memory.data = {
+          sourceId: source
+        };
+        break;
     }
     return;
   },
@@ -81,14 +87,20 @@ export const creepApi = {
    * @param creep
    */
   finish(creep: CreepMemory): void {
-    let minLevel;
-    let maxLevel;
+    const minLevel = Game.rooms[creep.room].creepMinLevel();
+    const maxLevel = Game.rooms[creep.room].creepMaxLevel();
+    let data;
     switch (creep.role) {
       case 'harvester':
       case 'worker':
       case 'upgrader':
-        minLevel = Game.rooms[creep.room].creepMinLevel();
-        maxLevel = Game.rooms[creep.room].creepMaxLevel();
+        creepApi.add(creep.role, 1, creep.room, false, minLevel, maxLevel);
+        break;
+      case 'filler':
+        data = creep.data as fillerData;
+        if (data.task) {
+          Game.rooms[creep.room].finishTransportTask(data.task);
+        }
         creepApi.add(creep.role, 1, creep.room, false, minLevel, maxLevel);
         break;
     }

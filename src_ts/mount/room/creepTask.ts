@@ -26,7 +26,6 @@ export class creepTask extends Room {
   public topCreepTask(): CreepTask | undefined {
     if (!this.memory.creepTaskList) {
       this.memory.creepTaskList = [];
-      return undefined;
     }
     return this.memory.creepTaskList[0];
   }
@@ -37,7 +36,6 @@ export class creepTask extends Room {
   public takeCreepTask(): CreepTask | undefined {
     if (!this.memory.creepTaskList) {
       this.memory.creepTaskList = [];
-      return undefined;
     }
     return this.memory.creepTaskList.shift();
   }
