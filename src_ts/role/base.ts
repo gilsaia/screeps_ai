@@ -86,18 +86,35 @@ const upgradeTarget = (creep: Creep): boolean => {
   }
   return true;
 };
+const workTarget = (creep: Creep): boolean => {
+  if (!creep.memory.data) {
+    creepApi.init(creep);
+  }
+  const data = creep.memory.data as workerData;
+  if (!data.task) {
+    data.task = taskApi.alloc(creep.room, 1);
+  }
+  if (data.task) {
+    const err = taskApi.exec(creep, data.task);
+    if (err === OK) {
+      taskApi.finish(creep.room, data.task, false);
+      delete data.task;
+    }
+  }
+  return true;
+};
 const fillTarget = (creep: Creep): boolean => {
   if (!creep.memory.data) {
     creepApi.init(creep);
   }
   const data = creep.memory.data as fillerData;
   if (!data.task) {
-    data.task = creep.room.takeTransportTask();
+    data.task = taskApi.alloc(creep.room, 0);
   }
   if (data.task) {
     const err = taskApi.exec(creep, data.task);
     if (err === OK) {
-      creep.room.finishTransportTask(data.task);
+      taskApi.finish(creep.room, data.task, false);
       delete data.task;
     }
   }
@@ -116,6 +133,6 @@ export const baseRoles: { [role in BaseRoleConstant]: CreepConfig } = {
     sourceSwitch: baseSourceSwitch,
     targetSwitch: baseTargetSwitch
   },
-  worker: { source: baseSource },
+  worker: { source: baseSource, target: workTarget, sourceSwitch: baseSourceSwitch, targetSwitch: baseTargetSwitch },
   filler: { source: baseSource, target: fillTarget, sourceSwitch: baseSourceSwitch, targetSwitch: baseTargetSwitch }
 };

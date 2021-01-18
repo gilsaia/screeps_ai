@@ -48,17 +48,34 @@ interface CreepConfig {
   sourceSwitch?: (creep: Creep) => boolean;
   targetSwitch?: (creep: Creep) => boolean;
 }
+interface Point {
+  x: number;
+  y: number;
+}
 
 /**
  * Different task type
  */
+type RoomTask = TransportTask | BuildTask;
+/**
+ * Permission
+ * 0 only transfer
+ * 1 add work | repair
+ */
+type RoomTaskPermission = 0 | 1;
 type TaskType = 'transport' | 'build' | 'repair';
-type RoomTask = TransportTask;
 type TransportTaskType = 'fillExtension';
 interface TransportTask {
   resourceType: ResourceConstant;
   taskType: TaskType;
   transportType: TransportTaskType;
+}
+interface BuildTask {
+  id?: Id<ConstructionSite>;
+  taskType: TaskType;
+  point: Point;
+  worker: number;
+  check: boolean;
 }
 /**
  * Data different creep need
@@ -79,10 +96,11 @@ interface upgraderData {
 }
 interface workerData {
   sourceId: Id<Source | Structure<StructureConstant>>;
+  task?: RoomTask;
 }
 interface fillerData {
   sourceId: Id<Source | Structure<StructureConstant>>;
-  task?: TransportTask;
+  task?: RoomTask;
 }
 interface Creep {
   work(): void;
@@ -98,9 +116,20 @@ interface CreepMemory {
   working: boolean;
   room: string;
   data?: creepData;
+  /**
+   * Fill extension (Only use in transportTask fill extension type)
+   */
+  fillId?: Id<Structure<StructureConstant>>;
 }
 interface Structure {
   work?(): void;
+}
+interface SourceCondition {
+  sourceId: Id<Source>;
+  containerId?: Id<ConstructionSite | Structure<StructureConstant>>;
+  containerPosX: number;
+  containerPosY: number;
+  complete: boolean;
 }
 interface Room {
   /**
@@ -116,6 +145,14 @@ interface Room {
   addTransportTask(type: ResourceConstant, transportType: TransportTaskType): ScreepsReturnCode;
   takeTransportTask(): TransportTask | undefined;
   finishTransportTask(task: TransportTask): ScreepsReturnCode;
+
+  /**
+   * BuildTask queue control logic
+   */
+  addBuildTask(point: Point, worker: number): ScreepsReturnCode;
+  topBuildTask(): BuildTask | undefined;
+  takeBuildTask(): BuildTask | undefined;
+
   /**
    * Room creep level control additional
    */
@@ -127,12 +164,8 @@ interface Room {
    */
   baseCreepListCorrect(): void;
 }
-interface SourceCondition {
-  sourceId: Id<Source>;
-  containerId?: Id<ConstructionSite | Structure<StructureConstant>>;
-  containerPosX: number;
-  containerPosY: number;
-  complete: boolean;
+interface RoomPosition {
+  createCustomConstructionSite(type: BuildableStructureConstant): ScreepsReturnCode;
 }
 interface RoomMemory {
   /**
@@ -158,9 +191,24 @@ interface RoomMemory {
    */
   transportTaskList: TransportTask[];
   transportTaskSet: number[];
+  /**
+   * Room build task
+   */
+  buildTaskList: BuildTask[];
+  autoPlanStage: number;
+  /**
+   * Auto plan extension pos
+   */
+  extensionCorePos: Point[];
 }
 declare namespace NodeJS {
   interface Global {
     hasMount: boolean;
   }
+}
+/**
+ * 包含任意键值对的对象
+ */
+interface AnyObject {
+  [key: string]: any;
 }

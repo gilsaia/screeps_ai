@@ -4,16 +4,32 @@ import { directionCheck } from '../config';
  * Auto plan stage for each room
  */
 export function autoPlan(): void {
-  for (const room in Game.rooms) {
-    if (Game.rooms[room].energyCapacityAvailable === 0) {
+  for (const roomName in Game.rooms) {
+    const room = Game.rooms[roomName];
+    if (room.energyCapacityAvailable === 0) {
       continue;
     }
-    if (!Game.rooms[room].memory.sourceList) {
-      findSource(Game.rooms[room]);
-      Game.rooms[room].memory.sourceCheck = false;
+    if (!room.memory.sourceList) {
+      findSource(room);
+      room.memory.sourceCheck = false;
+    }
+    if (!room.memory.autoPlanStage) {
+      room.memory.autoPlanStage = 1;
+    }
+    if (room.memory.autoPlanStage < 2 && room.controller && room.controller.level > 2) {
+      addExtensionCore(room, 1);
+      room.memory.autoPlanStage = 2;
     }
   }
   return;
+}
+/**
+ * Add extension core
+ * @param room
+ * @param num
+ */
+function addExtensionCore(room: Room, num: number): ScreepsReturnCode {
+  return OK;
 }
 /**
  * Determine container of the source position
@@ -64,7 +80,8 @@ function findSource(room: Room): ScreepsReturnCode {
         containerPos = pos;
       }
     }
-    const err = containerPos.createConstructionSite(STRUCTURE_CONTAINER);
+    const err = containerPos.createCustomConstructionSite(STRUCTURE_CONTAINER);
+    // const err = containerPos.createConstructionSite(STRUCTURE_CONTAINER);
     if (err !== OK) {
       console.log('Find Source Error %d', err);
       return err;

@@ -1,5 +1,6 @@
 import { baseCreepNumInit, baseExceptCreepNum } from '../config';
 import { roomStage, sourceApi } from './roomStage';
+import { taskApi } from './taskHandle';
 
 /**
  * API change creep
@@ -53,11 +54,7 @@ export const creepApi = {
         };
         break;
       case 'upgrader':
-        source = sourceApi.getSource(creep.room);
-        creep.memory.data = {
-          sourceId: source
-        };
-        break;
+      case 'worker':
       case 'filler':
         source = sourceApi.getSource(creep.room);
         creep.memory.data = {
@@ -77,6 +74,7 @@ export const creepApi = {
       case 'harvester':
       case 'upgrader':
       case 'worker':
+      case 'filler':
         room.memory.baseCreepList[role]++;
         break;
     }
@@ -92,14 +90,14 @@ export const creepApi = {
     let data;
     switch (creep.role) {
       case 'harvester':
-      case 'worker':
       case 'upgrader':
         creepApi.add(creep.role, 1, creep.room, false, minLevel, maxLevel);
         break;
       case 'filler':
+      case 'worker':
         data = creep.data as fillerData;
         if (data.task) {
-          Game.rooms[creep.room].finishTransportTask(data.task);
+          taskApi.finish(Game.rooms[creep.room], data.task, true);
         }
         creepApi.add(creep.role, 1, creep.room, false, minLevel, maxLevel);
         break;

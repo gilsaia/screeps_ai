@@ -7,8 +7,9 @@ import { creepSetup, structureSetup } from './init';
 /**
  * AI Start
  */
+mount();
 export function loop(): void {
-  mount();
+  // mount();
   autoPlan();
   creepSetup();
   creepControl(creepControlInterval);
