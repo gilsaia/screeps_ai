@@ -9,7 +9,6 @@ import { creepSetup, structureSetup } from './init';
  */
 mount();
 export function loop(): void {
-  // mount();
   autoPlan();
   creepSetup();
   creepControl(creepControlInterval);

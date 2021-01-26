@@ -195,11 +195,19 @@ interface RoomMemory {
    * Room build task
    */
   buildTaskList: BuildTask[];
-  autoPlanStage: number;
   /**
-   * Auto plan extension pos
+   * Auto plan
    */
-  extensionCorePos: Point[];
+  corePos?: Point;
+  autoPlanStage: number;
+}
+
+/**
+ * Layout information
+ */
+interface BaseLayout {
+  structureType: BuildableStructureConstant;
+  point: ([number, number] | null)[];
 }
 declare namespace NodeJS {
   interface Global {
