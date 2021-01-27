@@ -3,7 +3,7 @@
  */
 export const taskApi = {
   alloc(room: Room, permission: RoomTaskPermission): RoomTask | undefined {
-    if (permission >= 1 && !room.topCreepTask()) {
+    if (permission >= 1) {
       const task = room.takeBuildTask();
       if (task) {
         return task;

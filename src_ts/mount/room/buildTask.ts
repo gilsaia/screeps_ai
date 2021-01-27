@@ -31,7 +31,7 @@ export class buildTask extends Room {
 export class customConstructionSite extends RoomPosition {
   public createCustomConstructionSite(type: BuildableStructureConstant): ScreepsReturnCode {
     const point = { x: this.x, y: this.y };
-    Game.rooms[this.roomName].addBuildTask(point, 2);
+    Game.rooms[this.roomName].addBuildTask(point, 1);
     return this.createConstructionSite(type);
   }
 }

@@ -22,8 +22,8 @@ export const creepBody: { [role in RoleConstant]: BodyPartConstant[][] } = {
     [WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
   ],
   filler: [
-    [CARRY, CARRY, MOVE],
-    [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE],
+    [WORK, CARRY, MOVE],
+    [WORK, CARRY, CARRY, MOVE, MOVE],
     [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
   ]
 };
@@ -31,7 +31,7 @@ export const creepBody: { [role in RoleConstant]: BodyPartConstant[][] } = {
  * BaseCreep num for each room stage
  */
 export const baseExceptCreepNum: { [role in BaseRoleConstant]: number }[] = [
-  { harvester: 2, filler: 0, upgrader: 2, worker: 2 },
+  { harvester: 2, filler: 1, upgrader: 1, worker: 2 },
   { harvester: 2, filler: 1, upgrader: 2, worker: 3 }
 ];
 /**
