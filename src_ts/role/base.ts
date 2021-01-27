@@ -31,6 +31,7 @@ const harvestSource = (creep: Creep): boolean => {
   }
   const data = creep.memory.data as harvesterData;
   const source = Game.getObjectById(data.sourceId);
+  const container = Game.getObjectById(data.containerId);
   if (!source) {
     console.log('err sourceId check now!');
     return false;
@@ -38,7 +39,16 @@ const harvestSource = (creep: Creep): boolean => {
   if (!creep.pos.isEqualTo(data.containerPosX, data.containerPosY)) {
     creep.moveTo(data.containerPosX, data.containerPosY);
   }
-  creep.harvest(source);
+  if (
+    container &&
+    !(container as ConstructionSite).progressTotal &&
+    (container as StructureContainer).hits < (container as StructureContainer).hitsMax &&
+    creep.store.getUsedCapacity() > 0
+  ) {
+    creep.repair(container as Structure<StructureConstant>);
+  } else {
+    creep.harvest(source);
+  }
   return true;
 };
 const harvestTarget = (creep: Creep): boolean => {
