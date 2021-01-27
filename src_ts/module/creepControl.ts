@@ -81,6 +81,20 @@ export const creepApi = {
     return;
   },
   /**
+   * Decrease creep
+   */
+  decrease(room: Room, role: RoleConstant): void {
+    switch (role) {
+      case 'harvester':
+      case 'upgrader':
+      case 'worker':
+      case 'filler':
+        room.memory.baseCreepList[role]--;
+        break;
+    }
+    return;
+  },
+  /**
    * Delete creep need to do thing
    * @param creep
    */
@@ -88,10 +102,11 @@ export const creepApi = {
     const minLevel = Game.rooms[creep.room].creepMinLevel();
     const maxLevel = Game.rooms[creep.room].creepMaxLevel();
     let data;
+    creepApi.add(creep.role, 1, creep.room, false, minLevel, maxLevel);
+    creepApi.decrease(Game.rooms[creep.room], creep.role);
     switch (creep.role) {
       case 'harvester':
       case 'upgrader':
-        creepApi.add(creep.role, 1, creep.room, false, minLevel, maxLevel);
         break;
       case 'filler':
       case 'worker':
@@ -99,7 +114,6 @@ export const creepApi = {
         if (data.task) {
           taskApi.finish(Game.rooms[creep.room], data.task, true);
         }
-        creepApi.add(creep.role, 1, creep.room, false, minLevel, maxLevel);
         break;
     }
   }

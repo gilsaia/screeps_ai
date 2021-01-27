@@ -41,7 +41,7 @@ export function autoPlan(): void {
  * Return core pos of room
  * @param room
  */
-function getCorePos(room: Room): Point {
+export function getCorePos(room: Room): Point {
   const mat: CostMatrix = new PathFinder.CostMatrix();
   // 根据地形填写代价函数
   for (let i = 0; i < 50; ++i) {
