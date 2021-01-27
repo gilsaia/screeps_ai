@@ -1,3 +1,5 @@
+import { multiTaskTake } from '../../utils';
+
 export class buildTask extends Room {
   public addBuildTask(point: Point, worker: number): ScreepsReturnCode {
     if (!this.memory.buildTaskList) {
@@ -17,15 +19,7 @@ export class buildTask extends Room {
     if (!this.memory.buildTaskList) {
       this.memory.buildTaskList = [];
     }
-    if (this.memory.buildTaskList[0]) {
-      if (this.memory.buildTaskList[0].worker > 1) {
-        this.memory.buildTaskList[0].worker--;
-        return this.memory.buildTaskList[0];
-      } else {
-        return this.memory.buildTaskList.shift();
-      }
-    }
-    return undefined;
+    return multiTaskTake(this.memory.buildTaskList) as BuildTask | undefined;
   }
 }
 export class customConstructionSite extends RoomPosition {

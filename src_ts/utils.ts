@@ -47,3 +47,17 @@ export const findWalkableDir = function (pos: RoomPosition): DirectionConstant {
   }
   return TOP;
 };
+/**
+ * Logic of take task to multi worker
+ */
+export const multiTaskTake = function (taskList: RoomTask[]): RoomTask | undefined {
+  if (taskList[0]) {
+    if (taskList[0].worker > 1) {
+      taskList[0].worker--;
+      return taskList[0];
+    } else {
+      return taskList.shift();
+    }
+  }
+  return undefined;
+};

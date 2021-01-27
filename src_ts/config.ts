@@ -31,8 +31,8 @@ export const creepBody: { [role in RoleConstant]: BodyPartConstant[][] } = {
  * BaseCreep num for each room stage
  */
 export const baseExceptCreepNum: { [role in BaseRoleConstant]: number }[] = [
-  { harvester: 2, filler: 1, upgrader: 1, worker: 2 },
-  { harvester: 2, filler: 1, upgrader: 2, worker: 3 }
+  { harvester: 2, filler: 2, upgrader: 1, worker: 2 },
+  { harvester: 2, filler: 2, upgrader: 2, worker: 2 }
 ];
 /**
  * Init BaseCreep num for init

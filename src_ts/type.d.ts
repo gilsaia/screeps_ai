@@ -69,6 +69,7 @@ interface TransportTask {
   resourceType: ResourceConstant;
   taskType: TaskType;
   transportType: TransportTaskType;
+  worker: number;
 }
 interface BuildTask {
   id?: Id<ConstructionSite>;
@@ -142,10 +143,8 @@ interface Room {
   /**
    * TransportTask queue control logic
    */
-  addTransportTask(type: ResourceConstant, transportType: TransportTaskType): ScreepsReturnCode;
+  addTransportTask(type: ResourceConstant, transportType: TransportTaskType, worker: number): ScreepsReturnCode;
   takeTransportTask(): TransportTask | undefined;
-  finishTransportTask(task: TransportTask): ScreepsReturnCode;
-
   /**
    * BuildTask queue control logic
    */
@@ -190,7 +189,7 @@ interface RoomMemory {
    * Room transport task
    */
   transportTaskList: TransportTask[];
-  transportTaskSet: number[];
+  fillTaskAlloc: boolean;
   /**
    * Room build task
    */

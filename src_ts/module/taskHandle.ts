@@ -75,7 +75,14 @@ export const taskApi = {
   finish(room: Room, task: RoomTask, dead: boolean): ScreepsReturnCode {
     switch (task.taskType) {
       case 'transport':
-        room.finishTransportTask(task as TransportTask);
+        switch ((task as TransportTask).transportType) {
+          case 'fillExtension':
+            room.memory.fillTaskAlloc = false;
+            break;
+        }
+        if (dead) {
+          room.addTransportTask((task as TransportTask).resourceType, (task as TransportTask).transportType, 1);
+        }
         break;
       case 'build':
         if (dead) {

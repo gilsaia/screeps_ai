@@ -10,8 +10,9 @@ export class spawnExtend extends StructureSpawn {
     if (this.spawning) {
       return;
     }
-    if (this.room.energyAvailable < this.room.energyCapacityAvailable) {
-      this.room.addTransportTask(RESOURCE_ENERGY, 'fillExtension');
+    if (!this.room.memory.fillTaskAlloc && this.room.energyAvailable < this.room.energyCapacityAvailable) {
+      this.room.addTransportTask(RESOURCE_ENERGY, 'fillExtension', 2);
+      this.room.memory.fillTaskAlloc = true;
     }
     const task = this.room.topCreepTask();
     if (!task) {
