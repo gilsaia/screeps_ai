@@ -3,8 +3,14 @@
  */
 export const taskApi = {
   alloc(room: Room, permission: RoomTaskPermission): RoomTask | undefined {
-    if (permission >= 1) {
+    if (permission >= 2) {
       const task = room.takeBuildTask();
+      if (task) {
+        return task;
+      }
+    }
+    if (permission >= 1) {
+      const task = room.takeRepairTask();
       if (task) {
         return task;
       }
@@ -69,6 +75,21 @@ export const taskApi = {
           err = ERR_BUSY;
         }
         break;
+      case 'repair':
+        structure = Game.getObjectById((task as RepairTask).id);
+        if (!structure) {
+          err = OK;
+          break;
+        }
+        err = creep.repair(structure);
+        if (err === ERR_NOT_IN_RANGE) {
+          creep.moveTo(structure);
+        } else if (err === OK) {
+          if (!(structure.hits === structure.hitsMax)) {
+            err = ERR_BUSY;
+          }
+        }
+        break;
     }
     return err;
   },
@@ -87,6 +108,11 @@ export const taskApi = {
       case 'build':
         if (dead) {
           room.addBuildTask((task as BuildTask).point, 1);
+        }
+        break;
+      case 'repair':
+        if (dead) {
+          room.addRepairTask((task as RepairTask).id, 1);
         }
         break;
     }

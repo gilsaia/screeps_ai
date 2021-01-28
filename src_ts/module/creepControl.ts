@@ -128,28 +128,27 @@ export function creepControl(interval = 10): void {
   if (Game.time % interval) {
     return;
   }
-  for (const room in Game.rooms) {
+  for (const roomName in Game.rooms) {
+    const room = Game.rooms[roomName];
     // Not control room
-    if (Game.rooms[room].energyCapacityAvailable === 0) {
+    if (!(room.controller && room.controller.my)) {
       continue;
     }
     // Last time task hasn't been done
-    if (Game.rooms[room].topCreepTask()) {
+    if (room.topCreepTask()) {
       continue;
     }
-    const checkRoom = Game.rooms[room];
-    const minLevel = Game.rooms[room].creepMinLevel();
-    const maxLevel = Game.rooms[room].creepMaxLevel();
-    checkRoom.memory.baseCreepExceptList = baseExceptCreepNum[roomStage(checkRoom)];
-    if (!checkRoom.memory.baseCreepList) {
-      checkRoom.memory.baseCreepList = baseCreepNumInit;
+    const minLevel = room.creepMinLevel();
+    const maxLevel = room.creepMaxLevel();
+    room.memory.baseCreepExceptList = baseExceptCreepNum[roomStage(room)];
+    if (!room.memory.baseCreepList) {
+      room.memory.baseCreepList = baseCreepNumInit;
     }
-    for (const role in checkRoom.memory.baseCreepExceptList) {
+    for (const role in room.memory.baseCreepExceptList) {
       const toSpawn =
-        checkRoom.memory.baseCreepExceptList[role as BaseRoleConstant] -
-        checkRoom.memory.baseCreepList[role as BaseRoleConstant];
+        room.memory.baseCreepExceptList[role as BaseRoleConstant] - room.memory.baseCreepList[role as BaseRoleConstant];
       if (toSpawn > 0) {
-        creepApi.add(role as BaseRoleConstant, toSpawn, room, true, minLevel, maxLevel);
+        creepApi.add(role as BaseRoleConstant, toSpawn, room.name, true, minLevel, maxLevel);
       }
     }
   }

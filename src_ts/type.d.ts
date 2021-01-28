@@ -56,13 +56,14 @@ interface Point {
 /**
  * Different task type
  */
-type RoomTask = TransportTask | BuildTask;
+type RoomTask = TransportTask | BuildTask | RepairTask;
 /**
  * Permission
  * 0 only transfer
- * 1 add work | repair
+ * 1 transfer | repair
+ * 2 transfer | repair | build
  */
-type RoomTaskPermission = 0 | 1;
+type RoomTaskPermission = 0 | 1 | 2;
 type TaskType = 'transport' | 'build' | 'repair';
 type TransportTaskType = 'fillExtension';
 interface TransportTask {
@@ -77,6 +78,11 @@ interface BuildTask {
   point: Point;
   worker: number;
   check: boolean;
+}
+interface RepairTask {
+  id: Id<Structure<StructureConstant>>;
+  taskType: TaskType;
+  worker: number;
 }
 /**
  * Data different creep need
@@ -151,7 +157,9 @@ interface Room {
   addBuildTask(point: Point, worker: number): ScreepsReturnCode;
   topBuildTask(): BuildTask | undefined;
   takeBuildTask(): BuildTask | undefined;
-
+  addRepairTask(id: Id<Structure<StructureConstant>>, worker: number): ScreepsReturnCode;
+  topRepairTask(): RepairTask | undefined;
+  takeRepairTask(): RepairTask | undefined;
   /**
    * Room creep level control additional
    */
@@ -194,6 +202,7 @@ interface RoomMemory {
    * Room build task
    */
   buildTaskList: BuildTask[];
+  repairTaskList: RepairTask[];
   /**
    * Auto plan
    */

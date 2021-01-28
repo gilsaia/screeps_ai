@@ -48,6 +48,10 @@ export const baseCreepNumInit: { [role in BaseRoleConstant]: number } = {
  */
 export const creepControlInterval = 10;
 /**
+ * Repair check interval
+ */
+export const repairCheckInterval = 24;
+/**
  * 8 Direction check
  */
 export const directionCheck = new Map<DirectionConstant, number[]>([

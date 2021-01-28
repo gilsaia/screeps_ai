@@ -102,7 +102,7 @@ const workTarget = (creep: Creep): boolean => {
   }
   const data = creep.memory.data as workerData;
   if (!data.task) {
-    data.task = taskApi.alloc(creep.room, 1);
+    data.task = taskApi.alloc(creep.room, 2);
   }
   if (data.task) {
     const err = taskApi.exec(creep, data.task);
