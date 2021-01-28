@@ -38,7 +38,7 @@ export const sourceApi = {
     }
     let res;
     // TODO 物流系统上线后变为从物流系统获取
-    const index = _.random(0, room.memory.sourceList.length);
+    const index = _.random(0, room.memory.sourceList.length - 1);
     if (room.memory.sourceList[index].complete) {
       res = room.memory.sourceList[index].containerId as Id<Structure<StructureConstant>>;
     } else {

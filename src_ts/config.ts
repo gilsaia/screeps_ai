@@ -14,12 +14,12 @@ export const creepBody: { [role in RoleConstant]: BodyPartConstant[][] } = {
   upgrader: [
     [WORK, CARRY, MOVE],
     [WORK, WORK, CARRY, MOVE],
-    [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
+    [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
   ],
   worker: [
     [WORK, CARRY, MOVE],
     [WORK, WORK, CARRY, MOVE],
-    [WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
+    [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
   ],
   filler: [
     [WORK, CARRY, MOVE],
