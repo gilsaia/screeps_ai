@@ -24,7 +24,7 @@ export const creepBody: { [role in RoleConstant]: BodyPartConstant[][] } = {
   filler: [
     [WORK, CARRY, MOVE],
     [WORK, CARRY, CARRY, MOVE, MOVE],
-    [CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
+    [WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
   ]
 };
 /**

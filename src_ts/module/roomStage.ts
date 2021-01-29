@@ -48,6 +48,16 @@ export const sourceApi = {
     return res;
   },
   /**
+   * Get all source
+   * @param room
+   */
+  getAllSource(room: Room): SourceCondition[] {
+    if (!room.memory.sourceCheck) {
+      findContainer(room);
+    }
+    return room.memory.sourceList;
+  },
+  /**
    * Check source container complete
    * @param room
    * @param deepCheck

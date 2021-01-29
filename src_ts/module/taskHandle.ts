@@ -93,6 +93,15 @@ export const taskApi = {
     }
     return err;
   },
+  empty(creep: Creep, room: Room): ScreepsReturnCode {
+    if (room.controller) {
+      const err = creep.upgradeController(room.controller);
+      if (err === ERR_NOT_IN_RANGE) {
+        creep.moveTo(room.controller);
+      }
+    }
+    return OK;
+  },
   finish(room: Room, task: RoomTask, dead: boolean): ScreepsReturnCode {
     switch (task.taskType) {
       case 'transport':

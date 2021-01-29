@@ -11,6 +11,9 @@ export function repairCheck(interval: number): void {
     if (!(room.controller && room.controller.my)) {
       continue;
     }
+    if (room.topRepairTask()) {
+      continue;
+    }
     const structures = room.find(FIND_STRUCTURES, {
       filter: s =>
         s.hits < s.hitsMax &&

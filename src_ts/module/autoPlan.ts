@@ -1,4 +1,5 @@
 import { baseLayout, directionCheck } from '../config';
+import { sourceApi } from './roomStage';
 
 /**
  * Auto plan stage for each room
@@ -16,6 +17,9 @@ export function autoPlan(): void {
     if (!room.memory.autoPlanStage) {
       room.memory.autoPlanStage = 0;
     }
+    if (!room.memory.roadPlanStage) {
+      room.memory.roadPlanStage = 0;
+    }
     if (!room.memory.corePos) {
       room.memory.corePos = getCorePos(room);
       room.createFlag(room.memory.corePos.x, room.memory.corePos.y, 'Core_' + room.name, COLOR_ORANGE);
@@ -32,6 +36,23 @@ export function autoPlan(): void {
         }
       }
       room.memory.autoPlanStage++;
+    }
+    if (room.memory.roadPlanStage < 2 && room.controller && room.controller.level >= 2) {
+      let pos = room.controller.pos;
+      const terrain = room.getTerrain();
+      for (const dir of directionCheck) {
+        if (terrain.get(pos.x + dir[1][0], pos.y + dir[1][1]) !== TERRAIN_MASK_WALL) {
+          pos = new RoomPosition(pos.x + dir[1][0], pos.y + dir[1][1], roomName);
+          break;
+        }
+      }
+      roadAutoPlan(pos, room);
+      const sources = sourceApi.getAllSource(room);
+      for (const source of sources) {
+        pos = new RoomPosition(source.containerPosX, source.containerPosY, roomName);
+        roadAutoPlan(pos, room);
+      }
+      room.memory.roadPlanStage = 2;
     }
   }
   return;
@@ -136,6 +157,52 @@ function bfsDistance(mat: CostMatrix, sourcePos: Point): void {
     }
   }
   return;
+}
+
+/**
+ * Build road from start to one of the core
+ * @param start
+ * @param room
+ */
+function roadAutoPlan(start: RoomPosition, room: Room): void {
+  const mat = new PathFinder.CostMatrix();
+  const goals = setLayoutMatrix(mat, room);
+  const ret = PathFinder.search(start, goals, {
+    roomCallback(roomName: string): boolean | CostMatrix {
+      if (roomName !== room.name) {
+        return false;
+      }
+      return mat;
+    }
+  });
+  for (const pos of ret.path) {
+    pos.createCustomConstructionSite(STRUCTURE_ROAD);
+  }
+  return;
+}
+/**
+ * Set cost of layout
+ * @param mat
+ * @param room
+ */
+function setLayoutMatrix(mat: CostMatrix, room: Room): RoomPosition[] {
+  const core = room.memory.corePos as Point;
+  for (let i = -5; i < 6; ++i) {
+    mat.set(core.x - 5, core.y + i, 255);
+    mat.set(core.x + 5, core.y + i, 255);
+    mat.set(core.x + i, core.y - 5, 255);
+    mat.set(core.x + i, core.y + 5, 255);
+  }
+  mat.set(core.x - 5, core.y, 0);
+  mat.set(core.x + 5, core.y, 0);
+  mat.set(core.x, core.y - 5, 0);
+  mat.set(core.x, core.y + 5, 0);
+  return [
+    new RoomPosition(core.x - 5, core.y, room.name),
+    new RoomPosition(core.x + 5, core.y, room.name),
+    new RoomPosition(core.x, core.y - 5, room.name),
+    new RoomPosition(core.x, core.y + 5, room.name)
+  ];
 }
 /**
  * Determine container of the source position

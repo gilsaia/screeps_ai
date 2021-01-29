@@ -110,6 +110,8 @@ const workTarget = (creep: Creep): boolean => {
       taskApi.finish(creep.room, data.task, false);
       delete data.task;
     }
+  } else {
+    taskApi.empty(creep, creep.room);
   }
   return true;
 };
@@ -127,6 +129,8 @@ const fillTarget = (creep: Creep): boolean => {
       taskApi.finish(creep.room, data.task, false);
       delete data.task;
     }
+  } else {
+    taskApi.empty(creep, creep.room);
   }
   return true;
 };

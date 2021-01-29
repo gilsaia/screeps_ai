@@ -208,6 +208,7 @@ interface RoomMemory {
    */
   corePos?: Point;
   autoPlanStage: number;
+  roadPlanStage: number;
 }
 
 /**
