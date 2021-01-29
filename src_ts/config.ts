@@ -5,26 +5,74 @@ export const energyCreepLevel = [200, 300, 550, 800, 1300, 2300, 5600, 10000, 20
 /**
  * Creep Body each role
  */
-export const creepBody: { [role in RoleConstant]: BodyPartConstant[][] } = {
+export const creepBody: { [role in RoleConstant]: BodyConfig[][] } = {
   harvester: [
-    [WORK, CARRY, MOVE],
-    [WORK, WORK, CARRY, MOVE],
-    [WORK, WORK, WORK, WORK, CARRY, MOVE, MOVE]
+    [
+      { body: WORK, num: 1 },
+      { body: CARRY, num: 1 },
+      { body: MOVE, num: 1 }
+    ],
+    [
+      { body: WORK, num: 2 },
+      { body: CARRY, num: 1 },
+      { body: MOVE, num: 1 }
+    ],
+    [
+      { body: WORK, num: 4 },
+      { body: CARRY, num: 1 },
+      { body: MOVE, num: 2 }
+    ]
   ],
   upgrader: [
-    [WORK, CARRY, MOVE],
-    [WORK, WORK, CARRY, MOVE],
-    [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
+    [
+      { body: WORK, num: 1 },
+      { body: CARRY, num: 1 },
+      { body: MOVE, num: 1 }
+    ],
+    [
+      { body: WORK, num: 2 },
+      { body: CARRY, num: 1 },
+      { body: MOVE, num: 1 }
+    ],
+    [
+      { body: WORK, num: 2 },
+      { body: CARRY, num: 3 },
+      { body: MOVE, num: 3 }
+    ]
   ],
   worker: [
-    [WORK, CARRY, MOVE],
-    [WORK, WORK, CARRY, MOVE],
-    [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
+    [
+      { body: WORK, num: 1 },
+      { body: CARRY, num: 1 },
+      { body: MOVE, num: 1 }
+    ],
+    [
+      { body: WORK, num: 2 },
+      { body: CARRY, num: 1 },
+      { body: MOVE, num: 1 }
+    ],
+    [
+      { body: WORK, num: 2 },
+      { body: CARRY, num: 3 },
+      { body: MOVE, num: 3 }
+    ]
   ],
   filler: [
-    [WORK, CARRY, MOVE],
-    [WORK, CARRY, CARRY, MOVE, MOVE],
-    [WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
+    [
+      { body: WORK, num: 1 },
+      { body: CARRY, num: 1 },
+      { body: MOVE, num: 1 }
+    ],
+    [
+      { body: WORK, num: 1 },
+      { body: CARRY, num: 2 },
+      { body: MOVE, num: 2 }
+    ],
+    [
+      { body: WORK, num: 1 },
+      { body: CARRY, num: 6 },
+      { body: MOVE, num: 3 }
+    ]
   ]
 };
 /**

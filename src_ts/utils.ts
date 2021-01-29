@@ -61,3 +61,13 @@ export const multiTaskTake = function (taskList: RoomTask[]): RoomTask | undefin
   }
   return undefined;
 };
+/**
+ * Flat the body part
+ * @param bodyConfigs
+ */
+export const calBodyPart = function (bodyConfigs: BodyConfig[]): BodyPartConstant[] {
+  const bodyParts = bodyConfigs.map(bodyConfig => Array(bodyConfig.num).fill(bodyConfig.body) as BodyPartConstant[]);
+  let res: BodyPartConstant[] = [];
+  res = res.concat(...bodyParts);
+  return res;
+};

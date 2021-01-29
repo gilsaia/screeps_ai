@@ -1,3 +1,7 @@
+interface BodyConfig {
+  body: BodyPartConstant;
+  num: number;
+}
 type RoleConstant = BaseRoleConstant;
 type BaseRoleConstant = 'harvester' | 'upgrader' | 'worker' | 'filler';
 /**
