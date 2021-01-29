@@ -1,29 +1,24 @@
 /**
  * Find Structure need to repair(exclude wall rampart container)
  * @param interval
+ * @param room
  */
-export function repairCheck(interval: number): void {
+export function repairCheck(interval: number, room: Room): void {
   if (Game.time % interval) {
     return;
   }
-  for (const roomName in Game.rooms) {
-    const room = Game.rooms[roomName];
-    if (!(room.controller && room.controller.my)) {
-      continue;
-    }
-    if (room.topRepairTask()) {
-      continue;
-    }
-    const structures = room.find(FIND_STRUCTURES, {
-      filter: s =>
-        s.hits < s.hitsMax &&
-        s.structureType !== STRUCTURE_RAMPART &&
-        s.structureType !== STRUCTURE_WALL &&
-        s.structureType !== STRUCTURE_CONTAINER
-    });
-    for (const structure of structures) {
-      room.addRepairTask(structure.id, 1);
-    }
+  if (room.topRepairTask()) {
+    return;
+  }
+  const structures = room.find(FIND_STRUCTURES, {
+    filter: s =>
+      s.hits < s.hitsMax &&
+      s.structureType !== STRUCTURE_RAMPART &&
+      s.structureType !== STRUCTURE_WALL &&
+      s.structureType !== STRUCTURE_CONTAINER
+  });
+  for (const structure of structures) {
+    room.addRepairTask(structure.id, 1);
   }
   return;
 }

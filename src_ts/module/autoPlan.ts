@@ -3,57 +3,52 @@ import { sourceApi } from './roomStage';
 
 /**
  * Auto plan stage for each room
+ * @param room
  */
-export function autoPlan(): void {
-  for (const roomName in Game.rooms) {
-    const room = Game.rooms[roomName];
-    if (!(room.controller && room.controller.my)) {
-      continue;
-    }
-    if (!room.memory.sourceList) {
-      findSource(room);
-      room.memory.sourceCheck = false;
-    }
-    if (!room.memory.autoPlanStage) {
-      room.memory.autoPlanStage = 0;
-    }
-    if (!room.memory.roadPlanStage) {
-      room.memory.roadPlanStage = 0;
-    }
-    if (!room.memory.corePos) {
-      room.memory.corePos = getCorePos(room);
-      room.createFlag(room.memory.corePos.x, room.memory.corePos.y, 'Core_' + room.name, COLOR_ORANGE);
-    }
-    if (room.controller && room.memory.autoPlanStage < room.controller.level) {
-      for (const layout of baseLayout[room.memory.autoPlanStage]) {
-        for (const pos of layout.point) {
-          if (pos === null) {
-            // TODO null type means depend on room
-          } else {
-            const roomPos = new RoomPosition(room.memory.corePos.x + pos[0], room.memory.corePos.y + pos[1], room.name);
-            roomPos.createCustomConstructionSite(layout.structureType);
-          }
+export function autoPlan(room: Room): void {
+  if (!room.memory.sourceList) {
+    findSource(room);
+    room.memory.sourceCheck = false;
+  }
+  if (!room.memory.autoPlanStage) {
+    room.memory.autoPlanStage = 0;
+  }
+  if (!room.memory.roadPlanStage) {
+    room.memory.roadPlanStage = 0;
+  }
+  if (!room.memory.corePos) {
+    room.memory.corePos = getCorePos(room);
+    room.createFlag(room.memory.corePos.x, room.memory.corePos.y, 'Core_' + room.name, COLOR_ORANGE);
+  }
+  if (room.controller && room.memory.autoPlanStage < room.controller.level) {
+    for (const layout of baseLayout[room.memory.autoPlanStage]) {
+      for (const pos of layout.point) {
+        if (pos === null) {
+          // TODO null type means depend on room
+        } else {
+          const roomPos = new RoomPosition(room.memory.corePos.x + pos[0], room.memory.corePos.y + pos[1], room.name);
+          roomPos.createCustomConstructionSite(layout.structureType);
         }
       }
-      room.memory.autoPlanStage++;
     }
-    if (room.memory.roadPlanStage < 2 && room.controller && room.controller.level >= 2) {
-      let pos = room.controller.pos;
-      const terrain = room.getTerrain();
-      for (const dir of directionCheck) {
-        if (terrain.get(pos.x + dir[1][0], pos.y + dir[1][1]) !== TERRAIN_MASK_WALL) {
-          pos = new RoomPosition(pos.x + dir[1][0], pos.y + dir[1][1], roomName);
-          break;
-        }
+    room.memory.autoPlanStage++;
+  }
+  if (room.memory.roadPlanStage < 2 && room.controller && room.controller.level >= 2) {
+    let pos = room.controller.pos;
+    const terrain = room.getTerrain();
+    for (const dir of directionCheck) {
+      if (terrain.get(pos.x + dir[1][0], pos.y + dir[1][1]) !== TERRAIN_MASK_WALL) {
+        pos = new RoomPosition(pos.x + dir[1][0], pos.y + dir[1][1], room.name);
+        break;
       }
+    }
+    roadAutoPlan(pos, room);
+    const sources = sourceApi.getAllSource(room);
+    for (const source of sources) {
+      pos = new RoomPosition(source.containerPosX, source.containerPosY, room.name);
       roadAutoPlan(pos, room);
-      const sources = sourceApi.getAllSource(room);
-      for (const source of sources) {
-        pos = new RoomPosition(source.containerPosX, source.containerPosY, roomName);
-        roadAutoPlan(pos, room);
-      }
-      room.memory.roadPlanStage = 2;
     }
+    room.memory.roadPlanStage = 2;
   }
   return;
 }
