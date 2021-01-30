@@ -214,6 +214,14 @@ interface RoomMemory {
   corePos?: Point;
   autoPlanStage: number;
   roadPlanStage: number;
+  /**
+   * Enemy
+   */
+  enemies: (Creep | PowerCreep)[];
+  /**
+   * Tower work
+   */
+  towerTask?: RepairTask;
 }
 
 /**

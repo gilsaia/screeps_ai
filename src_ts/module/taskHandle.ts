@@ -1,6 +1,8 @@
 /**
  * Handle different task
  */
+import { towerUpperBound } from '../config';
+
 export const taskApi = {
   alloc(room: Room, permission: RoomTaskPermission): RoomTask | undefined {
     if (permission >= 2) {
@@ -50,6 +52,28 @@ export const taskApi = {
               err = ERR_BUSY;
             } else {
               err = OK;
+            }
+            break;
+          case 'fillTower':
+            if (creep.memory.fillId) {
+              structure = Game.getObjectById(creep.memory.fillId);
+            } else {
+              structure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
+                filter: s =>
+                  s.structureType === STRUCTURE_TOWER && s.store.getUsedCapacity(RESOURCE_ENERGY) < towerUpperBound
+              });
+            }
+            if (!structure || structure.structureType !== STRUCTURE_TOWER) {
+              return OK;
+            }
+            creep.memory.fillId = structure.id;
+            err = creep.transfer(structure, (task as TransportTask).resourceType);
+            if (err === ERR_NOT_IN_RANGE) {
+              creep.moveTo(structure);
+            } else if (err === ERR_FULL) {
+              delete creep.memory.fillId;
+            } else if (err === OK) {
+              err = ERR_BUSY;
             }
             break;
         }
@@ -107,7 +131,10 @@ export const taskApi = {
       case 'transport':
         switch ((task as TransportTask).transportType) {
           case 'fillExtension':
-            room.memory.fillTaskAlloc = false;
+            room.memory.fillExtensionTaskAlloc = false;
+            break;
+          case 'fillTower':
+            room.memory.fillTowerTaskAlloc = false;
             break;
         }
         if (dead) {
