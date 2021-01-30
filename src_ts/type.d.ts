@@ -69,7 +69,7 @@ type RoomTask = TransportTask | BuildTask | RepairTask;
  */
 type RoomTaskPermission = 0 | 1 | 2;
 type TaskType = 'transport' | 'build' | 'repair';
-type TransportTaskType = 'fillExtension';
+type TransportTaskType = 'fillExtension' | 'fillTower';
 interface TransportTask {
   resourceType: ResourceConstant;
   taskType: TaskType;
@@ -128,7 +128,7 @@ interface CreepMemory {
   room: string;
   data?: creepData;
   /**
-   * Fill extension (Only use in transportTask fill extension type)
+   * Fill extension (Only use in transportTask fill extension/tower type)
    */
   fillId?: Id<Structure<StructureConstant>>;
 }
@@ -201,7 +201,8 @@ interface RoomMemory {
    * Room transport task
    */
   transportTaskList: TransportTask[];
-  fillTaskAlloc: boolean;
+  fillExtensionTaskAlloc: boolean;
+  fillTowerTaskAlloc: boolean;
   /**
    * Room build task
    */
@@ -232,4 +233,23 @@ declare namespace NodeJS {
  */
 interface AnyObject {
   [key: string]: any;
+}
+interface StatsMemory {
+  gcl?: number;
+  gclLevel?: number;
+  gpl?: number;
+  gplLevel?: number;
+  cpu?: number;
+  bucket?: number;
+  credit?: number;
+  rooms: {
+    [roomName: string]: RoomStats;
+  };
+}
+interface RoomStats {
+  controllerRatio: number;
+  controllerLevel: number;
+}
+interface Memory {
+  stats: StatsMemory;
 }

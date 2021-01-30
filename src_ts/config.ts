@@ -99,6 +99,11 @@ export const creepControlInterval = 10;
  * Repair check interval
  */
 export const repairCheckInterval = 24;
+export const statsInterval = 32;
+/**
+ * Tower bound
+ */
+export const towerUpperBound = 900;
 /**
  * 8 Direction check
  */
@@ -116,7 +121,8 @@ export const directionCheck = new Map<DirectionConstant, number[]>([
  * Transport task type map to number
  */
 export const transportTaskTypeMap: { [type in TransportTaskType]: number } = {
-  fillExtension: 0
+  fillExtension: 0,
+  fillTower: 1
 };
 /**
  * Extension core pos

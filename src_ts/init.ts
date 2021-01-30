@@ -1,7 +1,8 @@
-import { creepControlInterval, repairCheckInterval } from './config';
+import { creepControlInterval, repairCheckInterval, statsInterval } from './config';
 import { autoPlan } from './module/autoPlan';
 import { creepApi, creepControl } from './module/creepControl';
 import { repairCheck } from './module/repairCheck';
+import { roomStats } from './module/stats';
 
 export function creepSetup(): void {
   for (const name in Memory.creeps) {
@@ -32,6 +33,7 @@ export function roomSetup(): void {
     autoPlan(room);
     creepControl(creepControlInterval, room);
     repairCheck(repairCheckInterval, room);
+    roomStats(statsInterval, room);
   }
   return;
 }
