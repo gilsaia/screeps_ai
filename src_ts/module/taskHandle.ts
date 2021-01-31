@@ -37,8 +37,7 @@ export const taskApi = {
               });
             }
             if (!structure) {
-              // Wrong Id omit the task
-              console.log('Wrong Id');
+              delete creep.memory.fillId;
               return OK;
             }
             creep.memory.fillId = structure.id;
@@ -51,6 +50,7 @@ export const taskApi = {
             if (creep.room.energyAvailable < creep.room.energyCapacityAvailable) {
               err = ERR_BUSY;
             } else {
+              delete creep.memory.fillId;
               err = OK;
             }
             break;
@@ -64,6 +64,7 @@ export const taskApi = {
               });
             }
             if (!structure || structure.structureType !== STRUCTURE_TOWER) {
+              delete creep.memory.fillId;
               return OK;
             }
             creep.memory.fillId = structure.id;

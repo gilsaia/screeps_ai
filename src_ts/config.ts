@@ -21,6 +21,11 @@ export const creepBody: { [role in RoleConstant]: BodyConfig[][] } = {
       { body: WORK, num: 4 },
       { body: CARRY, num: 1 },
       { body: MOVE, num: 2 }
+    ],
+    [
+      { body: WORK, num: 6 },
+      { body: CARRY, num: 1 },
+      { body: MOVE, num: 3 }
     ]
   ],
   upgrader: [
@@ -38,6 +43,11 @@ export const creepBody: { [role in RoleConstant]: BodyConfig[][] } = {
       { body: WORK, num: 2 },
       { body: CARRY, num: 3 },
       { body: MOVE, num: 3 }
+    ],
+    [
+      { body: WORK, num: 4 },
+      { body: CARRY, num: 4 },
+      { body: MOVE, num: 4 }
     ]
   ],
   worker: [
@@ -55,6 +65,11 @@ export const creepBody: { [role in RoleConstant]: BodyConfig[][] } = {
       { body: WORK, num: 2 },
       { body: CARRY, num: 3 },
       { body: MOVE, num: 3 }
+    ],
+    [
+      { body: WORK, num: 4 },
+      { body: CARRY, num: 4 },
+      { body: MOVE, num: 4 }
     ]
   ],
   filler: [
@@ -72,6 +87,11 @@ export const creepBody: { [role in RoleConstant]: BodyConfig[][] } = {
       { body: WORK, num: 1 },
       { body: CARRY, num: 6 },
       { body: MOVE, num: 3 }
+    ],
+    [
+      { body: WORK, num: 1 },
+      { body: CARRY, num: 8 },
+      { body: MOVE, num: 4 }
     ]
   ]
 };

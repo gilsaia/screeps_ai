@@ -6,7 +6,7 @@ const baseSource = (creep: Creep): boolean => {
   if (!creep.memory.data) {
     creepApi.init(creep);
   }
-  const data = creep.memory.data as upgraderData | workerData;
+  const data = creep.memory.data as upgraderData | workerData | fillerData;
   const source = Game.getObjectById(data.sourceId) as Source | Structure<StructureConstant>;
   if ((source as Structure<StructureConstant>).structureType) {
     if (creep.withdraw(source as Structure<StructureConstant>, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
