@@ -1,8 +1,8 @@
-import { SpawnExtend } from './spawn';
-import { TowerExtend } from './tower';
-import { assignPrototype } from 'old_ts/utils';
+import { assignPrototype } from '../../utils';
+import { spawnExtend } from './spawn';
+import { towerExtend } from './tower';
 
 export default function (): void {
-  assignPrototype(StructureSpawn, SpawnExtend);
-  assignPrototype(StructureTower, TowerExtend);
+  assignPrototype(StructureSpawn, spawnExtend);
+  assignPrototype(StructureTower, towerExtend);
 }

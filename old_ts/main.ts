@@ -1,10 +1,15 @@
-import { creepSetup, spawnSetup, structureSetup } from './init';
+import { statsInterval } from './config';
+import { statsSetup } from './module/stats';
 import mount from './mount';
+import { creepSetup, roomSetup, structureSetup } from './init';
 
-// screeps 代码入口
+/**
+ * AI Start
+ */
+mount();
 export function loop(): void {
-  mount();
+  roomSetup();
   creepSetup();
-  spawnSetup();
   structureSetup();
+  statsSetup(statsInterval);
 }

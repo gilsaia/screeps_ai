@@ -1,88 +1,152 @@
+import { creepApi } from '../module/creepControl';
+import { sourceApi, updateRoomStage } from '../module/roomStage';
+import { taskApi } from '../module/taskHandle';
+
 const baseSource = (creep: Creep): boolean => {
-  if (!creep.memory.source) {
-    console.log('Wrong Source!');
-    return false;
+  if (!creep.memory.data) {
+    creepApi.init(creep);
   }
-  const source = Game.getObjectById<Source>(creep.memory.source);
-  if (!source) {
-    creep.memory.source = undefined;
-    return false;
-  }
-  creep.getResource(source, RESOURCE_ENERGY);
-  return true;
-};
-const baseSwitch = (creep: Creep): boolean => {
-  if (creep.memory.working) {
-    if (creep.store[RESOURCE_ENERGY] === 0) {
-      return true;
+  const data = creep.memory.data as upgraderData | workerData | fillerData;
+  const source = Game.getObjectById(data.sourceId) as Source | Structure<StructureConstant>;
+  if ((source as Structure<StructureConstant>).structureType) {
+    if (creep.withdraw(source as Structure<StructureConstant>, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+      creep.moveTo(source);
     }
   } else {
-    if (creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
-      return true;
+    if (creep.harvest(source as Source) === ERR_NOT_IN_RANGE) {
+      creep.moveTo(source);
     }
   }
-  return false;
+  return true;
 };
-export const baseRoles: {
-  [role in BaseRoleConstant]: CreepFunction;
-} = {
+const baseTargetSwitch = (creep: Creep): boolean => {
+  return creep.store.getUsedCapacity() === 0;
+};
+const baseSourceSwitch = (creep: Creep): boolean => {
+  return creep.store.getFreeCapacity() === 0;
+};
+const harvestSource = (creep: Creep): boolean => {
+  if (!creep.memory.data) {
+    creepApi.init(creep);
+  }
+  const data = creep.memory.data as harvesterData;
+  const source = Game.getObjectById(data.sourceId);
+  const container = Game.getObjectById(data.containerId);
+  if (!source) {
+    console.log('err sourceId check now!');
+    return false;
+  }
+  if (!creep.pos.isEqualTo(data.containerPosX, data.containerPosY)) {
+    creep.moveTo(data.containerPosX, data.containerPosY);
+  }
+  if (
+    container &&
+    !(container as ConstructionSite).progressTotal &&
+    (container as StructureContainer).hits < (container as StructureContainer).hitsMax &&
+    creep.store.getUsedCapacity() > 0
+  ) {
+    creep.repair(container as Structure<StructureConstant>);
+  } else {
+    creep.harvest(source);
+  }
+  return true;
+};
+const harvestTarget = (creep: Creep): boolean => {
+  if (!creep.memory.data) {
+    creepApi.init(creep);
+  }
+  const data = creep.memory.data as harvesterData;
+  const constructionSite = Game.getObjectById(data.containerId) as ConstructionSite;
+  const err = creep.build(constructionSite);
+  if (err === ERR_NOT_IN_RANGE) {
+    creep.moveTo(data.containerPosX, data.containerPosY);
+  } else if (err === ERR_INVALID_TARGET) {
+    if (sourceApi.checkSource(creep.room, true, data.sourceId)) {
+      updateRoomStage(creep.room);
+      const sourceCondition = sourceApi.searchSource(creep.room, data.sourceId) as SourceCondition;
+      data.containerId = sourceCondition.containerId as Id<ConstructionSite | Structure<StructureConstant>>;
+      data.complete = sourceCondition.complete;
+    }
+  }
+  return true;
+};
+const harvestTargetSwitch = (creep: Creep): boolean => {
+  if (!creep.memory.data) {
+    creepApi.init(creep);
+  }
+  const data = creep.memory.data as harvesterData;
+  if (data.complete) {
+    return true;
+  }
+  return baseTargetSwitch(creep);
+};
+const harvestSourceSwitch = (creep: Creep): boolean => {
+  if (!creep.memory.data) {
+    creepApi.init(creep);
+  }
+  const data = creep.memory.data as harvesterData;
+  if (data.complete) {
+    return false;
+  }
+  return baseSourceSwitch(creep);
+};
+const upgradeTarget = (creep: Creep): boolean => {
+  if (creep.upgradeController(creep.room.controller as StructureController) === ERR_NOT_IN_RANGE) {
+    creep.moveTo(creep.room.controller as StructureController);
+  }
+  return true;
+};
+const workTarget = (creep: Creep): boolean => {
+  if (!creep.memory.data) {
+    creepApi.init(creep);
+  }
+  const data = creep.memory.data as workerData;
+  if (!data.task) {
+    data.task = taskApi.alloc(creep.room, 2);
+  }
+  if (data.task) {
+    const err = taskApi.exec(creep, data.task);
+    if (err === OK) {
+      taskApi.finish(creep.room, data.task, false);
+      delete data.task;
+    }
+  } else {
+    taskApi.empty(creep, creep.room);
+  }
+  return true;
+};
+const fillTarget = (creep: Creep): boolean => {
+  if (!creep.memory.data) {
+    creepApi.init(creep);
+  }
+  const data = creep.memory.data as fillerData;
+  if (!data.task) {
+    data.task = taskApi.alloc(creep.room, 0);
+  }
+  if (data.task) {
+    const err = taskApi.exec(creep, data.task);
+    if (err === OK) {
+      taskApi.finish(creep.room, data.task, false);
+      delete data.task;
+    }
+  } else {
+    taskApi.empty(creep, creep.room);
+  }
+  return true;
+};
+export const baseRoles: { [role in BaseRoleConstant]: CreepConfig } = {
   harvester: {
-    source: baseSource,
-    target: (creep: Creep): boolean => {
-      const structure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-        filter: s =>
-          (s.structureType === STRUCTURE_SPAWN || s.structureType === STRUCTURE_EXTENSION) &&
-          s.store.getUsedCapacity(RESOURCE_ENERGY) < s.store.getCapacity(RESOURCE_ENERGY)
-      });
-      if (!structure) {
-        console.log('No Empty Structure!');
-        return false;
-      }
-      if (creep.transfer(structure, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-        creep.moveTo(structure);
-      }
-      return true;
-    },
-    switch: baseSwitch
+    source: harvestSource,
+    target: harvestTarget,
+    sourceSwitch: harvestSourceSwitch,
+    targetSwitch: harvestTargetSwitch
   },
   upgrader: {
     source: baseSource,
-    target: (creep: Creep): boolean => {
-      const controller = creep.room.controller;
-      if (!controller) {
-        console.log('No Controller!');
-        return false;
-      }
-      if (creep.upgradeController(controller) === ERR_NOT_IN_RANGE) {
-        creep.moveTo(controller);
-      }
-      return true;
-    },
-    switch: baseSwitch
+    target: upgradeTarget,
+    sourceSwitch: baseSourceSwitch,
+    targetSwitch: baseTargetSwitch
   },
-  builder: {
-    source: baseSource,
-    target: (creep: Creep): boolean => {
-      const site = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES);
-      if (!site) {
-        const structure = creep.pos.findClosestByRange(FIND_MY_STRUCTURES, {
-          filter: s => s.hits < s.hitsMax
-        });
-        if (!structure) {
-          console.log('No Structure To Repair Or Build');
-          return false;
-        }
-        if (creep.repair(structure) === ERR_NOT_IN_RANGE) {
-          creep.moveTo(structure);
-        }
-        return true;
-      } else {
-        if (creep.build(site) === ERR_NOT_IN_RANGE) {
-          creep.moveTo(site);
-        }
-        return true;
-      }
-    },
-    switch: baseSwitch
-  }
+  worker: { source: baseSource, target: workTarget, sourceSwitch: baseSourceSwitch, targetSwitch: baseTargetSwitch },
+  filler: { source: baseSource, target: fillTarget, sourceSwitch: baseSourceSwitch, targetSwitch: baseTargetSwitch }
 };

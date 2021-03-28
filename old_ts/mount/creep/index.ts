@@ -1,6 +1,6 @@
-import { CreepBase } from './base';
-import { assignPrototype } from 'old_ts/utils';
+import { assignPrototype } from '../../utils';
+import { baseCreep } from './base';
 
 export default function (): void {
-  assignPrototype(Creep, CreepBase);
+  assignPrototype(Creep, baseCreep);
 }

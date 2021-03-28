@@ -1,45 +1,54 @@
-import { creepName } from 'old_ts/utils';
-import { roleConfig } from 'old_ts/config';
+import { creepBody, energyCreepLevel } from '../../config';
+import { creepApi } from '../../module/creepControl';
+import { calBodyPart, creepName } from '../../utils';
 
-export class SpawnExtend extends StructureSpawn {
+export class spawnExtend extends StructureSpawn {
+  /**
+   * Find if there is creep task and spawn it
+   */
   public work(): void {
-    const task = this.room.topSpawnTask();
-    if (task === undefined || this.spawning) {
+    if (!this.room.memory.fillExtensionTaskAlloc && this.room.energyAvailable < this.room.energyCapacityAvailable) {
+      this.room.addTransportTask(RESOURCE_ENERGY, 'fillExtension', 2);
+      this.room.memory.fillExtensionTaskAlloc = true;
+    }
+    if (this.spawning) {
       return;
     }
-    const res = this.spawningTask(task);
-    if (res === OK) {
-      this.room.takeSpawnTask();
-    } else if (res === ERR_RCL_NOT_ENOUGH) {
-      // todo:对于等级不够情况的初始化引导
+    const task = this.room.topCreepTask();
+    if (!task) {
+      return;
+    }
+    const creepLevel = this.findCreepLevel(task.initial);
+    if (this.spawnLevelCreep(task.role, creepLevel) === OK) {
+      creepApi.count(this.room, task.role);
+      this.room.takeCreepTask();
+    }
+    return;
+  }
+
+  /**
+   * Find proper level
+   * @param initial
+   * @private
+   */
+  private findCreepLevel(initial: boolean): number {
+    if (initial) {
+      let level = 0;
+      while (this.room.energyAvailable >= energyCreepLevel[level + 1]) {
+        ++level;
+      }
+      return level;
+    } else {
+      let level = 0;
+      while (this.room.energyCapacityAvailable >= energyCreepLevel[level + 1]) {
+        ++level;
+      }
+      return level;
     }
   }
-  public spawningTask(
-    task: RoleConstant
-  ): OK | ERR_NOT_ENOUGH_ENERGY | ERR_RCL_NOT_ENOUGH | ERR_NAME_EXISTS | ERR_INVALID_TARGET {
-    // const config = roleConfig.get(task);
-    const config = roleConfig[task];
-    if (!config) {
-      console.log('Wrong role name ' + task);
-      return OK;
-    }
-    // 获取资源初始化信息
-    const sourceId: Id<any> | undefined = this.room.findSource(task);
-    const name = creepName(task);
-    const res = this.spawnCreep(config.body, name, {
-      memory: { role: task, source: sourceId, working: false, room: this.room.name }
+  private spawnLevelCreep(roleName: RoleConstant, level: number): ScreepsReturnCode {
+    return this.spawnCreep(calBodyPart(creepBody[roleName][level]), creepName(roleName, this.room.name), {
+      memory: { role: roleName, working: false, room: this.room.name }
     });
-    if (res === ERR_NAME_EXISTS) {
-      return ERR_NAME_EXISTS;
-    } else if (res === ERR_NOT_ENOUGH_ENERGY) {
-      return ERR_NOT_ENOUGH_ENERGY;
-    } else if (res === ERR_RCL_NOT_ENOUGH) {
-      return ERR_RCL_NOT_ENOUGH;
-    } else if (res === OK) {
-      this.room.changeCreepList(task, 1);
-      // TODO 获取资源方式修改
-      this.room.changeWorker(sourceId, 1);
-    }
-    return OK;
   }
 }

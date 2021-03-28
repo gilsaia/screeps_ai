@@ -1,40 +1,40 @@
-import { baseRoles } from 'old_ts/role/base';
+import { creepControlInterval } from '../../config';
+import { baseRoles } from '../../role/base';
 
-export class CreepBase extends Creep {
+export class baseCreep extends Creep {
   public work(): void {
     if (this.spawning) {
       return;
     }
-    const func: CreepFunction = baseRoles[this.memory.role];
-    if (!func) {
-      console.log('No Role Like' + this.memory.role);
-      return;
+    /**
+     * Get config
+     */
+    const config = baseRoles[this.memory.role];
+    /**
+     * If have counter
+     */
+    if (config.count) {
+      config.count(this, creepControlInterval);
     }
-    let working = this.memory.working;
-    if (func.switch) {
-      if (func.switch(this)) {
-        this.memory.working = working = !working;
+    /**
+     * If can change condition
+     */
+    if (this.memory.working && config.targetSwitch) {
+      if (config.targetSwitch(this)) {
+        this.memory.working = false;
+      }
+    } else if (!this.memory.working && config.sourceSwitch) {
+      if (config.sourceSwitch(this)) {
+        this.memory.working = true;
       }
     }
-    if (working && func.target) {
-      func.target(this);
+    /**
+     * Get action
+     */
+    if (this.memory.working && config.target) {
+      config.target(this);
     } else {
-      func.source(this);
+      config.source(this);
     }
-  }
-  public getResource(
-    target: Structure | Source | Mineral | Deposit,
-    resourceType: ResourceConstant
-  ): ScreepsReturnCode {
-    let result: ScreepsReturnCode;
-    if (target instanceof Structure){
-      result = this.withdraw(target, resourceType);
-    } else {
-      result = this.harvest(target);
-    }
-    if (result === ERR_NOT_IN_RANGE) {
-      this.moveTo(target);
-    }
-    return result;
   }
 }

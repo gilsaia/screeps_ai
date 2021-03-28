@@ -1,6 +1,4 @@
 .eslintrc.js
-/src_js
 /old_ts
 /dist
-Gruntfile.js
 rollup.config.js

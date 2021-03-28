@@ -1,24 +1,19 @@
-import { setupCreepControl } from './module/creepControl';
+import { creepControlInterval, repairCheckInterval, statsInterval } from './config';
+import { autoPlan } from './module/autoPlan';
+import { creepApi, creepControl } from './module/creepControl';
+import { repairCheck } from './module/repairCheck';
+import { roomStats } from './module/stats';
 
 export function creepSetup(): void {
   for (const name in Memory.creeps) {
     if (!Game.creeps[name]) {
-      Game.rooms[Memory.creeps[name].room]?.changeCreepList(Memory.creeps[name].role, -1);
-      Game.rooms[Memory.creeps[name].room]?.changeWorker(Memory.creeps[name].source, -1);
+      creepApi.finish(Memory.creeps[name]);
       delete Memory.creeps[name];
     } else {
       Game.creeps[name].work();
     }
   }
 }
-export function spawnSetup(): void {
-  if (!(Game.time % 20)) {
-    console.log('Begin Creep Control');
-    setupCreepControl();
-    console.log('Creep Control End');
-  }
-}
-
 export function structureSetup(): void {
   for (const name in Game.structures) {
     const structure = Game.structures[name];
@@ -26,4 +21,19 @@ export function structureSetup(): void {
       structure.work();
     }
   }
+}
+export function roomSetup(): void {
+  for (const name in Game.rooms) {
+    const room = Game.rooms[name];
+    // Doing thing in all room
+    // Doing thing in controlled room
+    if (!(room.controller && room.controller.my)) {
+      continue;
+    }
+    autoPlan(room);
+    creepControl(creepControlInterval, room);
+    repairCheck(repairCheckInterval, room);
+    roomStats(statsInterval, room);
+  }
+  return;
 }
