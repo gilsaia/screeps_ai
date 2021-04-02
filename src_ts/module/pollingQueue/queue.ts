@@ -1,9 +1,9 @@
-class pQue implements PollingQueue {
-  public registerTask(task: pollingTask): void {
+export const pollingQueue: PollingQueue = {
+  registerTask(task: PollingTask) {
     this.taskQueue[task.interval].push(task);
     return;
-  }
-  public run(): void {
+  },
+  run() {
     const taskList = this.taskQueue.shift();
     this.taskQueue.push([]);
     if (!taskList) {
@@ -16,9 +16,6 @@ class pQue implements PollingQueue {
       }
     }
     return;
-  }
-
-  private readonly taskQueue: pollingTask[][] = [];
-}
-
-export const pollingQueue = new pQue();
+  },
+  taskQueue: []
+};

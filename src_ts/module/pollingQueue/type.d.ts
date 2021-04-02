@@ -5,13 +5,14 @@ interface exampleData {
 interface example2Data {
   exampleStr: string;
 }
-interface pollingTask {
+interface PollingTask {
   check(data: queueData): void;
   data: queueData;
   interval: number;
   repeat: boolean;
 }
 interface PollingQueue {
-  registerTask(task: pollingTask): void;
+  registerTask(task: PollingTask): void;
   run(): void;
+  taskQueue: PollingTask[][];
 }
