@@ -1,6 +1,6 @@
 export const pollingQueue: PollingQueue = {
   registerTask(task: PollingTask) {
-    this.taskQueue[task.interval].push(task);
+    this.taskQueue[0].push(task);
     return;
   },
   run() {

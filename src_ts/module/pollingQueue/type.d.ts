@@ -1,4 +1,4 @@
-type queueData = exampleData | example2Data;
+type queueData = exampleData | example2Data | energyCheckData;
 interface exampleData {
   exampleStr: string;
 }
