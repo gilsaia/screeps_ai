@@ -11,8 +11,17 @@ interface PollingTask {
   interval: number;
   repeat: boolean;
 }
+interface PollingRoomTask {
+  check(data: queueData, room: Room): void;
+  data: queueData;
+  allRoom: boolean;
+  interval: number;
+  repeat: boolean;
+}
 interface PollingQueue {
   registerTask(task: PollingTask): void;
+  registerRoomTask(task: PollingRoomTask): void;
   run(): void;
   taskQueue: PollingTask[][];
+  roomTaskQueue: PollingRoomTask[][];
 }

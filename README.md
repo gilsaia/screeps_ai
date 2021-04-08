@@ -2,6 +2,8 @@
 
 目标是全自动化运行的screeps代码 
 
+项目配置部分参考[screeps-typescript-starter](https://github.com/screepers/screeps-typescript-starter)
+
 **注意！！！** 目前离目标非常非常遥远！！项目结构仅供参考 近期进行重构 旧有代码已移动至old_ts
 
 ---
@@ -16,4 +18,3 @@
     - [ ] 定期检查框架
     - [ ] 生产creep配置
 - [ ] 单元测试方法
-

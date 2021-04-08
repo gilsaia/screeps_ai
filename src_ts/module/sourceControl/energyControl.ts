@@ -65,59 +65,57 @@ function sourceInit(room: Room): void {
   return;
 }
 
-export const energyCheckTask: PollingTask = {
-  check(data: energyCheckData): void {
+export const energyCheckTask: PollingRoomTask = {
+  check(data: energyCheckData, room: Room): void {
     console.log(data.taskName);
-    for (const roomName in Game.rooms) {
-      const room = Game.rooms[roomName];
-      if (!room.memory.sourceCondition) {
-        sourceInit(room);
-      }
-      if (!room._energyController) {
-        room._energyController = new EnergyControl();
-      }
-      const baseSourcePos: RoomPosition[] = [];
-      for (const condition of room.memory.sourceCondition) {
-        const containerPos = new RoomPosition(condition.containerPos.x, condition.containerPos.y, roomName);
-        if (!condition.containerId || Game.getObjectById(condition.containerId)) {
-          // 查看是否有已完成建筑
-          const structure = containerPos.lookFor(LOOK_STRUCTURES);
-          if (structure[0] && structure[0].structureType === STRUCTURE_CONTAINER) {
-            condition.containerPlan = true;
-            condition.containerComplete = true;
-            condition.containerId = structure[0].id as Id<StructureContainer>;
-
-            // 完成则放入建筑位置
-            baseSourcePos.push(containerPos);
-            continue;
-          }
-
-          // 可以确定container未完成 放入能量源位置
-          baseSourcePos.push(new RoomPosition(condition.sourcePos.x, condition.sourcePos.y, roomName));
-
-          // 查看是否存在建筑工地
-          const site = containerPos.lookFor(LOOK_CONSTRUCTION_SITES);
-          if (site[0] && site[0].structureType === STRUCTURE_CONTAINER) {
-            condition.containerPlan = true;
-            condition.containerComplete = false;
-            condition.containerId = site[0].id;
-            continue;
-          }
-          // 对于刚刚放置建筑工地的情况 第一次查不到工地的存在
-          if (!condition.containerPlan) {
-            condition.containerPlan = true;
-            continue;
-          }
-          // container确定损坏 重新再建
-          condition.containerPos = autoPlanController.autoPlanContainer(containerPos);
-          condition.containerPlan = false;
-          condition.containerComplete = false;
-        }
-      }
-      room._energyController.editBaseSource(baseSourcePos);
+    if (!room.memory.sourceCondition) {
+      sourceInit(room);
     }
+    if (!room._energyController) {
+      room._energyController = new EnergyControl();
+    }
+    const baseSourcePos: RoomPosition[] = [];
+    for (const condition of room.memory.sourceCondition) {
+      const containerPos = new RoomPosition(condition.containerPos.x, condition.containerPos.y, room.name);
+      if (!condition.containerId || Game.getObjectById(condition.containerId)) {
+        // 查看是否有已完成建筑
+        const structure = containerPos.lookFor(LOOK_STRUCTURES);
+        if (structure[0] && structure[0].structureType === STRUCTURE_CONTAINER) {
+          condition.containerPlan = true;
+          condition.containerComplete = true;
+          condition.containerId = structure[0].id as Id<StructureContainer>;
+
+          // 完成则放入建筑位置
+          baseSourcePos.push(containerPos);
+          continue;
+        }
+
+        // 可以确定container未完成 放入能量源位置
+        baseSourcePos.push(new RoomPosition(condition.sourcePos.x, condition.sourcePos.y, room.name));
+
+        // 查看是否存在建筑工地
+        const site = containerPos.lookFor(LOOK_CONSTRUCTION_SITES);
+        if (site[0] && site[0].structureType === STRUCTURE_CONTAINER) {
+          condition.containerPlan = true;
+          condition.containerComplete = false;
+          condition.containerId = site[0].id;
+          continue;
+        }
+        // 对于刚刚放置建筑工地的情况 第一次查不到工地的存在
+        if (!condition.containerPlan) {
+          condition.containerPlan = true;
+          continue;
+        }
+        // container确定损坏 重新再建
+        condition.containerPos = autoPlanController.autoPlanContainer(containerPos);
+        condition.containerPlan = false;
+        condition.containerComplete = false;
+      }
+    }
+    room._energyController.editBaseSource(baseSourcePos);
   },
   data: { taskName: 'Check Source Condition' },
   interval: 40,
-  repeat: true
+  repeat: true,
+  allRoom: false
 };

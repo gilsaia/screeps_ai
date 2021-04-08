@@ -1,7 +1,8 @@
 import { energyCheckTask } from '../sourceControl/energyControl';
 import { pollingQueue } from './queue';
-const pollingTasks: PollingTask[] = [energyCheckTask];
+// const pollingTasks: PollingTask[] = [energyCheckTask];
+const pollingRoomTasks: PollingRoomTask[] = [energyCheckTask];
 
 export function pollingSetup(): void {
-  pollingTasks.forEach(task => pollingQueue.registerTask(task));
+  pollingRoomTasks.forEach(task => pollingQueue.registerRoomTask(task));
 }
