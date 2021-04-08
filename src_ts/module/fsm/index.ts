@@ -18,7 +18,7 @@ export default class Fsm<T> implements FiniteStateMachine<T> {
       state = this.stateDict[this.initState];
     }
     let stateReturnCode = state.do(target);
-    if (state.switch) {
+    if (stateReturnCode !== STATE_CONTINUE && state.switch) {
       stateReturnCode = state.switch(target);
     }
     if (!this.stateTransMap[state.name][stateReturnCode]) {

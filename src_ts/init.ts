@@ -1,10 +1,5 @@
-import { pollingQueue } from './module/pollingQueue/queue';
-import { energyCheckTask } from './module/sourceControl/energyControl';
+import { pollingSetup } from './module/pollingQueue';
 
-const pollingTasks = [energyCheckTask];
-
-export function pollingSetup(): void {
-  for (const task of pollingTasks) {
-    pollingQueue.registerTask(task);
-  }
+export function init(): void {
+  pollingSetup();
 }

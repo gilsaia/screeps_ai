@@ -1,9 +1,9 @@
-type queueData = exampleData | example2Data | energyCheckData;
+type queueData = exampleData | standardData | energyCheckData;
 interface exampleData {
   exampleStr: string;
 }
-interface example2Data {
-  exampleStr: string;
+interface standardData {
+  taskName: string;
 }
 interface PollingTask {
   check(data: queueData): void;
