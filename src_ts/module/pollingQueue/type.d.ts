@@ -10,6 +10,7 @@ interface PollingTask {
   data: queueData;
   interval: number;
   repeat: boolean;
+  immediate: boolean;
 }
 interface PollingRoomTask {
   check(data: queueData, room: Room): void;

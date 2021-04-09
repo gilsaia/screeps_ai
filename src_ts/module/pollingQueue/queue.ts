@@ -1,6 +1,8 @@
 export const pollingQueue: PollingQueue = {
   registerTask(task: PollingTask) {
-    task.check(task.data);
+    if (task.immediate) {
+      task.check(task.data);
+    }
     this.taskQueue[task.interval].push(task);
     return;
   },
