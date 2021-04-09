@@ -1,5 +1,7 @@
 import container from './container';
+import { GetCorePos } from './core';
 
 export const autoPlanController: AutoPlanController = {
-  autoPlanContainer: container
+  autoPlanContainer: container,
+  autoPlanCore: GetCorePos
 };
