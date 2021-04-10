@@ -1,4 +1,5 @@
-class BaseTaskController<TaskType extends string, CustomTask extends RoomTask<TaskType>> {
+class BaseTaskController<TaskType extends string, CustomTask extends RoomTask<TaskType>>
+  implements TaskController<TaskType, CustomTask> {
   public addTask(task: CustomTask): void {
     const taskKey = getTaskKey(task);
     if (this.taskDict.has(taskKey)) {
