@@ -13,3 +13,7 @@ type WorkActionGenerator<T extends WorkTaskType> = (creep: Creep, task: WorkTask
 interface Room {
   _workTaskController: TaskController<WorkTaskType, WorkTasks[WorkTaskType]>;
 }
+interface pollingBuildTaskData {
+  roomName: string;
+  pos: ScreepsPosition;
+}

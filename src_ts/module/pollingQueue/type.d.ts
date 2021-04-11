@@ -1,4 +1,4 @@
-type queueData = exampleData | standardData | energyCheckData;
+type queueData = exampleData | standardData | energyCheckData | pollingBuildTaskData;
 interface exampleData {
   exampleStr: string;
 }
