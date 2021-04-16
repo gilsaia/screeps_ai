@@ -18,8 +18,11 @@ interface RoomTask<T extends string> {
 interface RoomTaskAction {
   run(): TaskReturnCode;
 }
-interface RoomMemory {
+interface RoomTaskBackup {
   [taskName: string]: string;
+}
+interface RoomMemory {
+  taskBackup: RoomTaskBackup;
 }
 interface TaskController<TaskType extends string, CustomTask extends RoomTask<TaskType>> {
   addTask(task: CustomTask): void;

@@ -1,7 +1,15 @@
+import { CreepTaskController } from './creep/taskController';
 import { TransferTaskController } from './transfer/taskController';
 import { WorkTaskController } from './work/taskController';
 
 export const TaskApi: BasicTaskApi = {
+  addCreepTask(room: Room, task: CreepTasks[CreepTaskType]) {
+    if (!room._creepTaskController) {
+      room._creepTaskController = new CreepTaskController(room);
+    }
+    room._creepTaskController.addTask(task);
+    return;
+  },
   addTransferTask(room: Room, task: TransferTasks[TransferTaskType]): void {
     if (!room._transferTaskController) {
       room._transferTaskController = new TransferTaskController(room);
@@ -15,6 +23,12 @@ export const TaskApi: BasicTaskApi = {
     }
     room._workTaskController.addTask(task);
     return;
+  },
+  getCreepTask(room: Room): CreepTasks[CreepTaskType] | undefined {
+    if (!room._creepTaskController) {
+      room._creepTaskController = new CreepTaskController(room);
+    }
+    return room._creepTaskController.getTask();
   },
   getCarryTask(room: Room): TransferTasks[TransferTaskType] | undefined {
     if (!room._transferTaskController) {
@@ -49,6 +63,13 @@ export const TaskApi: BasicTaskApi = {
         room._transferTaskController.updateTask(task);
         break;
     }
+    return;
+  },
+  completeCreepTask(room: Room, task: CreepTasks[CreepTaskType]) {
+    if (!room._creepTaskController) {
+      room._creepTaskController = new CreepTaskController(room);
+    }
+    room._creepTaskController.completeTask(task);
     return;
   },
   completeTask(room: Room, task: WorkTasks[WorkTaskType] | TransferTasks[TransferTaskType]): void {

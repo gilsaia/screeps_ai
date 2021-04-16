@@ -59,7 +59,7 @@ export class BaseTaskController<TaskType extends string, CustomTask extends Room
     return;
   }
   protected roomName: string;
-  protected TASK_ROOM_KEY = '';
+  protected TASK_ROOM_KEY: string;
   public tasks: CustomTask[] = [];
   private taskDict: Set<string>;
   public constructor(room: Room, memoryKey: string) {
@@ -72,7 +72,7 @@ export class BaseTaskController<TaskType extends string, CustomTask extends Room
     const roomMemory = Game.rooms[this.roomName].memory;
     if (!roomMemory) return;
     // 从内存中解析数据
-    this.tasks = JSON.parse(roomMemory[this.TASK_ROOM_KEY] || '[]') as CustomTask[];
+    this.tasks = JSON.parse(roomMemory.taskBackup[this.TASK_ROOM_KEY] || '[]') as CustomTask[];
     for (const task of this.tasks) {
       this.taskDict.add(getTaskKey(task));
     }
@@ -80,9 +80,11 @@ export class BaseTaskController<TaskType extends string, CustomTask extends Room
   }
   protected save(): void {
     const roomMemory = Game.rooms[this.roomName].memory;
-
-    if (this.tasks.length <= 0) delete roomMemory[this.TASK_ROOM_KEY];
-    else roomMemory[this.TASK_ROOM_KEY] = JSON.stringify(this.tasks);
+    if (!roomMemory.taskBackup) {
+      roomMemory.taskBackup = {};
+    }
+    if (this.tasks.length <= 0) delete roomMemory.taskBackup[this.TASK_ROOM_KEY];
+    else roomMemory.taskBackup[this.TASK_ROOM_KEY] = JSON.stringify(this.tasks);
     return;
   }
 }
