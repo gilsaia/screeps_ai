@@ -14,3 +14,12 @@ interface creepBodyConfig {
 interface BasicCreepConfigApi {
   getBaseCreepBodyPart(role: BaseCreepRole, roomLevel: number): BodyPartConstant[];
 }
+
+interface CreepMemory {
+  role: CreepRole;
+  room: string;
+}
+
+interface Room {
+  _baseCreepControl: { [role in BaseCreepRole]: number };
+}

@@ -88,3 +88,9 @@ export const BaseCreepRolePart: { [role in BaseCreepRole]: creepBodyConfig[][] }
     ]
   ]
 };
+export const BaseCreepNumberLimit: { [role in BaseCreepRole]: number[] } = {
+  harvester: [2, 2, 2],
+  upgrader: [1, 1, 2],
+  transfer: [1, 2, 2],
+  worker: [0, 1, 2]
+};
