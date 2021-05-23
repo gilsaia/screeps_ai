@@ -1,8 +1,8 @@
 import { BaseCreepRolePart } from './config';
 
 export const CreepConfigApi: BasicCreepConfigApi = {
-  getBaseCreepBodyPart(role: BaseCreepRole, roomLevel: number): BodyPartConstant[] {
-    return calCreepBodyPart(BaseCreepRolePart[role][roomLevel]);
+  getBaseCreepBodyPart(role: BaseCreepRole, stage: number): BodyPartConstant[] {
+    return calCreepBodyPart(BaseCreepRolePart[role][stage]);
   }
 };
 function calCreepBodyPart(bodyConfigs: creepBodyConfig[]): BodyPartConstant[] {
