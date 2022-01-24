@@ -1,3 +1,0 @@
-interface Structure {
-  work?(): void;
-}
