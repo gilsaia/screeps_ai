@@ -9,7 +9,6 @@ module.exports = {
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
         "plugin:prettier/recommended",
-        "prettier/@typescript-eslint",
         "plugin:import/errors",
         "plugin:import/warnings",
         "plugin:import/typescript"
@@ -41,6 +40,12 @@ module.exports = {
         ],
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-parameter-properties": "off",
+        "@typescript-eslint/no-shadow": [
+            "error",
+            {
+                hoist: "all"
+            }
+        ],
         "@typescript-eslint/no-unused-expressions": "error",
         "@typescript-eslint/no-use-before-define": ["error", { functions: false }],
         "@typescript-eslint/prefer-for-of": "error",
@@ -56,7 +61,7 @@ module.exports = {
         "id-blacklist": ["error", "any", "Number", "number", "String", "string", "Boolean", "boolean", "Undefined"],
         "id-match": "error",
         "linebreak-style": "off",
-        "max-classes-per-file": ["error", 3],
+        "max-classes-per-file": ["error", 1],
         "new-parens": "off",
         "newline-per-chained-call": "off",
         "no-bitwise": "error",
@@ -67,24 +72,17 @@ module.exports = {
         "no-invalid-this": "off",
         "no-multiple-empty-lines": "off",
         "no-new-wrappers": "error",
-        "no-shadow": [
-            "error",
-            {
-                hoist: "all"
-            }
-        ],
+        "no-shadow": "off",
         "no-throw-literal": "error",
         "no-trailing-spaces": "off",
         "no-undef-init": "error",
-        "no-underscore-dangle": "off",
+        "no-underscore-dangle": "warn",
         "no-var": "error",
         "object-shorthand": "error",
         "one-var": ["error", "never"],
         "quote-props": "off",
         radix: "error",
-        "sort-imports": ["warn",{
-            "ignoreDeclarationSort":true
-        }],
+        "sort-imports": "warn",
         "spaced-comment": "error",
     }
 };
