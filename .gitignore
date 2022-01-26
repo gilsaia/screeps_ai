@@ -5,3 +5,4 @@ dist/
 screeps-multimeter.json
 .screeps-multimeter.history
 /test_web_assembly/
+coverage/
