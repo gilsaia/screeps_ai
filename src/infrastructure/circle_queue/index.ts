@@ -1,5 +1,5 @@
 // 循环队列基础实现 实现特定方法提高效率
-export class circleQueue<T> {
+export class CircleQueue<T> {
   private readonly items: T[];
   private index: number;
   private readonly limit: number;
