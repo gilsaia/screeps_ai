@@ -21,7 +21,7 @@ interface SampleConfig {
   information: string;
 }
 interface Sample2Config {
-  information: string;
+  information: number;
 }
 
 // 对于当前Action不同的返回值对应的下一个Action
