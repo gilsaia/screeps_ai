@@ -14,6 +14,7 @@ export const SimpleFindAction: FindActionAlgorithm = {
 export class ActionGraph<T> {
   protected findAlgorithm: FindActionAlgorithm;
   private readonly actions: actions<T>;
+  private readonly usedActions: Set<string>;
   private readonly edges: graphEdges;
   private readonly default: Action<T>;
   private readonly defaultId: string;
@@ -32,6 +33,7 @@ export class ActionGraph<T> {
     this.findAlgorithm = findAlgorithm;
     this.edges = {};
     this.actions = {};
+    this.usedActions = new Set<string>();
     this.actions[defaultAction.id] = defaultAction;
   }
   // 获取当前的默认Action
@@ -58,19 +60,23 @@ export class ActionGraph<T> {
     this.checkTempEdge(source, code);
     this.findAlgorithm.Push(this.edges[source][code], targetCondition);
   }
-  // 若当前Action未注册则注册Action和临时边 否则不进行操作
+  // 若当前Action未注册则注册Action和临时边 否则不进行操作 注意 该记录只在该方法内生效 但全过程保存一致 记录可删除
   public RegisterActionWithTempEdgeOnce(
     action: Action<T>,
     source: string,
     code: ACTION_CODE,
     targetCondition: TempEdgeCondition
   ): void {
-    if (this.actions[action.id] !== undefined) {
+    if (this.usedActions.has(action.id)) {
       return;
     }
     this.actions[action.id] = action;
+    this.usedActions.add(action.id);
     this.checkTempEdge(source, code);
     this.findAlgorithm.Push(this.edges[source][code], targetCondition);
+  }
+  public RemoveUsedHistory(id: string): void {
+    this.usedActions.delete(id);
   }
   // 删除指定Action和它关联的所有临时边
   public RemoveAction(id: string): void {
@@ -82,10 +88,11 @@ export class ActionGraph<T> {
     delete this.edges[id];
   }
   // 删除指定临时边以及临时边指向的Action
-  public RemoveTempEdgeWithAction(source: string, code: ACTION_CODE, index: number): void {
+  public RemoveTempEdgeWithAction(source: string, code: ACTION_CODE): void {
     if (this.edges[source] === undefined || this.edges[source][code] === undefined) {
       return;
     }
+    const index = this.findAlgorithm.FindIndex(this.edges[source][code]);
     const target = this.edges[source][code][index];
     if (target.id === this.defaultId) {
       console.error('Try to remove default action!');
@@ -111,6 +118,7 @@ export class ActionGraph<T> {
     return this.actions[source].next[code];
   }
   // 对外暴露的响应接口 会首先尝试获取临时边 不存在的情况下获取Action本身状态
+  // 注意！务必谨慎使用 可能导致删除连带状态 对于长链的task请仔细考虑
   public GetResponse(source: string, code: ACTION_CODE, opt?: ActionGraphGetResponseParam): string {
     if (
       this.edges[source] === undefined ||
@@ -120,16 +128,20 @@ export class ActionGraph<T> {
       return this.getOriginResponse(source, code);
     }
     const tempConditions = this.edges[source][code];
-    const index = this.findAlgorithm.FindIndex(tempConditions);
-    const target = tempConditions[index].id;
-    --tempConditions[index].count;
-    if (tempConditions[index].count === 0) {
-      if (opt && opt.onlyRemoveEdge) {
-        this.RemoveTempEdge(source, code);
-      } else {
-        this.RemoveTempEdgeWithAction(source, code, index);
+    while (tempConditions.length) {
+      const index = this.findAlgorithm.FindIndex(tempConditions);
+      if (tempConditions[index].count === 0) {
+        if (opt && opt.onlyRemoveEdge) {
+          this.RemoveTempEdge(source, code);
+        } else {
+          this.RemoveTempEdgeWithAction(source, code);
+        }
+        continue;
       }
+      const target = tempConditions[index].id;
+      --tempConditions[index].count;
+      return target;
     }
-    return target;
+    return this.getOriginResponse(source, code);
   }
 }
