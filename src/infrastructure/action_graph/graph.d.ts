@@ -12,8 +12,14 @@ interface FindActionAlgorithm {
 interface TempEdgeCondition {
   id: string;
   count: number;
-  priority?: number;
   config?: ActionConfig;
+  param: TempEdgeParam;
+}
+
+// 临时边的配置选项
+interface TempEdgeParam {
+  onlyRemoveEdge?: boolean;
+  priority?: number;
 }
 
 // 临时边数组 根据不同的ActionCode对应不同的反应
@@ -33,5 +39,8 @@ interface actions<T> {
 
 // 对于实际调用响应函数调整参数
 interface ActionGraphGetResponseParam {
+  /**
+   * @deprecated 在方法中使用不符合语义 请直接在边中添加
+   */
   onlyRemoveEdge?: boolean;
 }

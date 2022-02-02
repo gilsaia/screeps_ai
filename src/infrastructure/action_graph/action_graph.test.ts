@@ -102,7 +102,8 @@ it('临时边注册/检查', () => {
   expect(actionGraph.GetResponse('Fault', ACTION_WAIT)).toBe('Test');
   const temp: TempEdgeCondition = {
     id: 'Third',
-    count: 1
+    count: 1,
+    param: {}
   };
   actionGraph.RegisterActionWithTempEdgeOnce(thirdAction, 'Fault', ACTION_WORKING, temp);
   actionGraph.RegisterActionWithTempEdgeOnce(thirdAction, 'Fault', ACTION_WORKING, temp);
@@ -111,6 +112,7 @@ it('临时边注册/检查', () => {
   expect(actionGraph.GetResponse('Fault', ACTION_WORKING)).toBe('Next');
   expect(actionGraph.ExistAction('Third')).toBe(false);
   temp.count = 1;
+  temp.param = { onlyRemoveEdge: true };
   actionGraph.RegisterTempEdge('Fault', ACTION_WORKING, temp);
   actionGraph.RegisterAction(thirdAction);
   expect(actionGraph.GetResponse('Fault', ACTION_WORKING, { onlyRemoveEdge: true })).toBe('Third');
@@ -128,7 +130,10 @@ it('延迟删边机制测试', () => {
   actionGraph.RegisterAction(testAction);
   const temp: TempEdgeCondition = {
     id: 'Third',
-    count: 1
+    count: 1,
+    param: {
+      onlyRemoveEdge: true
+    }
   };
   actionGraph.RegisterAction(thirdAction);
   const ACTION_WORKING = 1;

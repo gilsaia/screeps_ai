@@ -131,7 +131,7 @@ export class ActionGraph<T> {
     while (tempConditions.length) {
       const index = this.findAlgorithm.FindIndex(tempConditions);
       if (tempConditions[index].count === 0) {
-        if (opt && opt.onlyRemoveEdge) {
+        if (tempConditions[index].param.onlyRemoveEdge) {
           this.RemoveTempEdge(source, code);
         } else {
           this.RemoveTempEdgeWithAction(source, code);
