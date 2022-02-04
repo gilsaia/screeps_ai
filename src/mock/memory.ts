@@ -1,8 +1,8 @@
+import { getMock } from './utils';
+
 /**
  * 伪造的全局 Memory 类
  */
-import { getMock } from './utils';
-
 export class MemoryMock {
   public creeps = {};
   public rooms = {};

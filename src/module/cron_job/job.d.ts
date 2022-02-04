@@ -1,4 +1,8 @@
-type CronJobConfig = SampleConfig | Sample2Config;
+type CronJobConfig = SampleConfig | Sample2Config | CronTestConfig;
+interface CronTestConfig {
+  result: number;
+  add: number;
+}
 interface CronJobParam {
   EveryRoom: boolean;
   Repeat: boolean;
