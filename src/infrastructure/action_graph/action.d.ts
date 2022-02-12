@@ -1,11 +1,19 @@
 // 每个Action的返回值 不同的返回值表示当前Action的不同情况
-type ACTION_CODE = ACTION_WORKING | ACTION_COMPLETE | ACTION_FAIL | ACTION_WAIT | ACTION_EMPTY | ACTION_CONTINUE;
+type ACTION_CODE =
+  | ACTION_WORKING
+  | ACTION_COMPLETE
+  | ACTION_FAIL
+  | ACTION_WAIT
+  | ACTION_EMPTY
+  | ACTION_CONTINUE
+  | ACTION_WRONG;
 type ACTION_WORKING = 1;
 type ACTION_COMPLETE = 2;
 type ACTION_FAIL = 3;
 type ACTION_WAIT = 4;
 type ACTION_EMPTY = 5;
 type ACTION_CONTINUE = 6;
+type ACTION_WRONG = 7;
 
 declare const ACTION_WORKING: ACTION_WORKING;
 declare const ACTION_COMPLETE: ACTION_COMPLETE;
@@ -14,9 +22,10 @@ declare const ACTION_WAIT: ACTION_WAIT;
 declare const ACTION_EMPTY: ACTION_EMPTY;
 // 语义化的CONTINUE具有特殊含义 表示当前Action完成的同时本回合可进行下一项工作
 declare const ACTION_CONTINUE: ACTION_CONTINUE;
+declare const ACTION_WRONG: ACTION_WRONG;
 
 // 每个Action都会有自己的配置文件 实体在运行时按照配置文件进行
-type ActionConfig = SampleConfig | Sample2Config;
+type ActionConfig = SampleConfig | Sample2Config | CreepActionConfig;
 interface SampleConfig {
   information: string;
 }
@@ -25,7 +34,7 @@ interface Sample2Config {
 }
 
 // 对于当前Action不同的返回值对应的下一个Action
-interface actionEdge {
+interface ActionEdge {
   [code: number]: string;
 }
 
@@ -39,5 +48,5 @@ interface Action<Obj> {
   // 对应的执行动作 返回定义的返回值
   act(obj: Obj, config: ActionConfig): ACTION_CODE;
   // 当前动作链接到的下一个动作
-  next: actionEdge;
+  next: ActionEdge;
 }
