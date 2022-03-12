@@ -7,10 +7,10 @@ import { AllDirections } from '../../../utils/utils';
  * @return {ACTION_FAIL|ACTION_WORKING|ACTION_EMPTY|ACTION_CONTINUE}
  */
 const build = function (creep: Creep, config: CreepBuildConfig): ACTION_CODE {
-  if (!creep.memory.config || !creep.memory.config.target || !creep.memory.config.constructionSiteId) {
+  if (!creep.memory.config || !creep.memory.config.buildTarget || !creep.memory.config.constructionSiteId) {
     return ACTION_FAIL;
   }
-  if (creep.memory.config.target.x === creep.pos.x && creep.memory.config.target.y === creep.pos.y) {
+  if (creep.memory.config.buildTarget.x === creep.pos.x && creep.memory.config.buildTarget.y === creep.pos.y) {
     // TODO: cache terrain
     const terrain = creep.room.getTerrain();
     for (const dir of AllDirections) {
