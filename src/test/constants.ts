@@ -1,0 +1,9 @@
+Object.assign(exports, {
+  ACTION_WORKING: 1,
+  ACTION_COMPLETE: 2,
+  ACTION_FAIL: 3,
+  ACTION_WAIT: 4,
+  ACTION_EMPTY: 5,
+  ACTION_CONTINUE: 6,
+  ACTION_WRONG: 7
+});

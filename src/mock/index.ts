@@ -12,4 +12,6 @@ export const refreshGlobalMock = function (): void {
   // 下面的 @screeps/common/lib/constants 就是所有的全局常量
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   Object.assign(global, require('@screeps/common/lib/constants'));
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  Object.assign(global, require('../test/constants'));
 };
