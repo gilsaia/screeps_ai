@@ -1,5 +1,7 @@
 ### gilsaia的screeps代码仓库
 
+[![codecov](https://codecov.io/gh/gilsaia/screeps_ai/branch/master/graph/badge.svg?token=52KCUQ3UAK)](https://codecov.io/gh/gilsaia/screeps_ai)
+
 目标是全自动化运行的screeps代码 
 
 项目配置部分参考[screeps-typescript-starter](https://github.com/screepers/screeps-typescript-starter)
