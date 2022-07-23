@@ -1,6 +1,8 @@
 import { CircleQueue } from '../../infrastructure/circle_queue';
 
-// 定时任务模块 提供注册任务和运行两个接口
+/**
+ * 定时任务模块 提供注册任务和运行两个接口
+ */
 export class CronJobModule {
   private queue: CircleQueue<CronJob[]>;
   public constructor(tickLimit: number) {
