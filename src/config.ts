@@ -1,1 +1,1 @@
-export const CRON_JOB_LIMIT = 100;
+export const CRON_JOB_LIMIT = 40;

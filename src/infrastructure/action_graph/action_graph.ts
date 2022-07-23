@@ -11,6 +11,9 @@ export const SimpleFindAction: FindActionAlgorithm = {
   }
 };
 // 动作图的基类 提供各项基础功能
+/**
+ * @deprecated
+ */
 export class ActionGraph<T> {
   protected findAlgorithm: FindActionAlgorithm;
   private readonly actions: actions<T>;
