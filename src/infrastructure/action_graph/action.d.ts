@@ -70,5 +70,5 @@ interface ActionV2<Obj> {
   // Action的配置信息 包含具体的情况
   config: ActionConfig;
   // 执行动作
-  act(obj: Obj): ACTION_CODE;
+  act(obj: Obj, config: ActionConfig): ACTION_CODE;
 }
