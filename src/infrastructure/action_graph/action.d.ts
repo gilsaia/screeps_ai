@@ -57,18 +57,16 @@ interface Action<Obj> {
   next: ActionEdge;
 }
 
-type ACTION_CATEGORY = ACTION_CATEGORY_TEMP | ACTION_CATEGORY_FOREVER;
-type ACTION_CATEGORY_TEMP = 'temp';
-type ACTION_CATEGORY_FOREVER = 'forever';
-
 /**
  * @description 最小动作元语 任何调度都不会打破Action的最小性质
  */
 interface ActionV2<Obj> {
   // id在同一个graph中保持唯一 细节不同可以添加不同后缀
   id: string;
-  // Action的类别 包括临时/长期等
-  category: ACTION_CATEGORY;
+  // Action的类别
+  category: string;
+  // 是否为临时状态
+  isTemp: boolean;
   // Action的配置信息 包含具体的情况
   config: ActionConfig;
   // 执行动作
