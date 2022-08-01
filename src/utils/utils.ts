@@ -2,6 +2,10 @@ export function CompareRoomPositionWithInRoomPosition(pos: RoomPosition, inPos: 
   return pos.inRangeTo(inPos.x, inPos.y, inPos.range);
 }
 
+export function GetActionReactionName(id: string, code: number): string {
+  return id + '-' + code.toString();
+}
+
 export const AllDirections: DirectionMap[] = [
   { dir: TOP, dx: 0, dy: -1 },
   { dir: TOP_RIGHT, dx: 1, dy: -1 },

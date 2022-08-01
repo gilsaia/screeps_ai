@@ -18,3 +18,11 @@ type CREEP_GRAPH_SOURCE = 'source';
 
 declare const CREEP_GRAPH_BASE: CREEP_GRAPH_BASE;
 declare const CREEP_GRAPH_SOURCE: CREEP_GRAPH_SOURCE;
+
+interface ActionDeathLinkTable {
+  [id: string]: string;
+}
+
+interface ActionDeathHistory {
+  [id: string]: string[];
+}

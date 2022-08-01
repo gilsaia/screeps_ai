@@ -2,6 +2,7 @@ import { ActionGraph, SimpleFindAction } from '../../infrastructure/action_graph
 
 /**
  * 针对creep运行的动作图模型
+ * @deprecated
  */
 export class CreepActionGraph extends ActionGraph<Creep> {
   private name: string;
